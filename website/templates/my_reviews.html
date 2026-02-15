@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}My Ratings - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-5 animate__animated animate__fadeIn">
+        <div>
+            <a href="/dashboard" class="btn btn-light btn-sm rounded-pill px-3 mb-2 border shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+            <h2 class="fw-bold text-dark mb-0">🌟 My Student Reviews</h2>
+            <p class="text-muted small">See what students are saying about your teaching sessions.</p>
+        </div>
+        <div class="text-end">
+            <div class="badge bg-warning text-dark rounded-pill px-4 py-2 fs-6 shadow-sm">
+                Avg Rating: {{ user.get_avg_rating() }} ⭐
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="col-md-6 animate__animated animate__fadeInUp" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 border-start border-5 border-warning transition-hover">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex align-items-center">
+                            
+                            {# ✅ FIX: Accessing student data via the Request link #}
+                            {% set student = review.request.sender %}
+                            <img src="{{ student.profile_pic if 'http' in student.profile_pic else url_for('static', filename='uploads/' + student.profile_pic) }}" 
+                                 class="rounded-circle me-3 border shadow-sm" 
+                                 style="width: 48px; height: 48px; object-fit: cover;"
+                                 onerror="this.src='{{ student.generate_avatar_url() }}'">
+                            
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ student.first_name }} {{ student.last_name or '' }}</h6>
+                                <small class="text-muted" style="font-size: 0.65rem;">
+                                    <i class="far fa-calendar-alt me-1"></i>{{ review.timestamp.strftime('%d %b, %Y') }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="text-warning fw-bold">
+                            {% for i in range(review.rating) %}⭐{% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="bg-light p-3 rounded-3 mb-2 flex-grow-1 border border-light-subtle">
+                        <p class="mb-0 text-dark small" style="font-style: italic; line-height: 1.5;">
+                            "{{ review.review if review.review else 'The instructor was very helpful and the session was great!' }}"
+                        </p>
+                    </div>
+                    
+                    <div class="mt-2 pt-2 border-top">
+                        <small class="text-muted">Class: <span class="fw-bold text-success">{{ review.request.skill.title }}</span></small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="opacity-25 mb-3 text-muted">
+                    <i class="fas fa-star-half-alt fa-5x"></i>
+                </div>
+                <h4 class="text-dark fw-bold">No reviews yet!</h4>
+                <p class="text-muted small">Student feedback will appear here after they complete your sessions.</p>
+                <a href="/add-skill" class="btn btn-primary rounded-pill px-5 mt-2 fw-bold shadow">Manage Your Skills</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .transition-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #f1f5f9 !important; }
+    .transition-hover:hover { 
+        transform: translateY(-8px); 
+        box-shadow: 0 1.5rem 3.5rem rgba(0,0,0,0.08) !important;
+        border-color: #f59e0b !important;
+    }
+</style>
+{% endblock %}

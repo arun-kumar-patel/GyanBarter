@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }}'s Profile - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-8">
+            
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                <div class="card-body p-5 text-center">
+                    <img src="{{ user.profile_pic if 'http' in user.profile_pic else url_for('static', filename='uploads/' + user.profile_pic) }}" 
+                         class="rounded-circle shadow-sm mb-3 border border-4 border-light"
+                         style="width: 140px; height: 140px; object-fit: cover;"
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ user.first_name }}&background=random'">
+                    
+                    <h3 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name or '' }}</h3>
+                    <p class="text-primary fw-bold mb-3">@{{ user.username }}</p>
+                    
+                    <div class="d-flex justify-content-center gap-3 mb-4">
+                        <div class="px-3 border-end">
+                            <h5 class="mb-0 fw-bold">{{ user.get_avg_rating() }} <i class="fas fa-star text-warning small"></i></h5>
+                            <small class="text-muted">Rating</small>
+                        </div>
+                        <div class="px-3">
+                            <h5 class="mb-0 fw-bold">{{ user.skills|length }}</h5>
+                            <small class="text-muted">Skills</small>
+                        </div>
+                    </div>
+
+                    <p class="text-secondary mb-4 mx-auto" style="max-width: 500px;">
+                        {{ user.bio if user.bio else "This user hasn't added a bio yet." }}
+                    </p>
+
+                    <a href="mailto:{{ user.email }}" class="btn btn-primary rounded-pill px-4 fw-bold">
+                        <i class="fas fa-envelope me-2"></i>Contact Teacher
+                    </a>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-3"><i class="fas fa-graduation-cap me-2 text-primary"></i>Skills Offered</h5>
+            <div class="row g-3 mb-5">
+                {% for skill in user.skills %}
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3">
+                        <h6 class="fw-bold mb-1">{{ skill.title }}</h6>
+                        <p class="small text-muted mb-0">{{ skill.description[:80] }}...</p>
+                        <div class="mt-2">
+                            <span class="badge bg-light text-primary">{{ skill.skill_type }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted ps-2">No active skills posted yet.</p>
+                {% endfor %}
+            </div>
+
+            <h5 class="fw-bold mb-3"><i class="fas fa-star me-2 text-warning"></i>Student Reviews</h5>
+            {% if user.ratings_received %}
+                {% for r in user.ratings_received %}
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="text-warning small">
+                            {% for i in range(r.rating) %}<i class="fas fa-star"></i>{% endfor %}
+                        </div>
+                        <small class="text-muted">{{ r.timestamp.strftime('%d %b, %Y') }}</small>
+                    </div>
+                    <p class="mb-0 text-dark small">"{{ r.review }}"</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="bg-light rounded-4 p-4 text-center text-muted">No reviews yet.</div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

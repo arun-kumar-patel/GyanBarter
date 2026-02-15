@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}User Dashboard - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8">
+            <h1 class="fw-bold m-0">Welcome, {{ user.first_name }}! 👋</h1>
+            <p class="text-muted">Here is your learning and earning overview.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="/add-skill" class="btn btn-primary rounded-pill shadow-sm px-4">
+                <i class="fas fa-plus me-1"></i> Add New Skill
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 hover-lift bg-white">
+                <div class="text-warning fs-1 mb-2"><i class="fas fa-coins"></i></div>
+                <h3 class="fw-bold mb-0 text-dark">{{ user.coins }}</h3>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Total Coins</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 hover-lift bg-white">
+                <div class="text-primary fs-1 mb-2"><i class="fas fa-graduation-cap"></i></div>
+                <h3 class="fw-bold mb-0 text-dark">{{ my_skills|length }}</h3>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">My Skills</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('views.incoming_requests') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 hover-lift bg-white border-start border-success border-4">
+                    <div class="text-success fs-1 mb-2"><i class="fas fa-check-double"></i></div>
+                    <h3 class="fw-bold mb-0 text-dark">{{ incoming }}</h3>
+                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Incoming Requests</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 hover-lift bg-white">
+                <div class="text-danger fs-1 mb-2"><i class="fas fa-star"></i></div>
+                <h3 class="fw-bold mb-0 text-dark">{{ user.get_avg_rating() }}</h3>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Avg Rating</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0 text-dark">My Active Skills (Manage Skills)</h5>
+            <span class="badge bg-light text-dark border">Total: {{ my_skills|length }}</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr class="small text-muted text-uppercase">
+                        <th class="ps-4">Skill Title</th>
+                        <th>Category</th>
+                        <th>Cost</th>
+                        <th class="text-end pe-4">Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for skill in my_skills %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark">{{ skill.title }}</div>
+                            <small class="text-muted">
+                                <i class="far fa-clock me-1"></i>
+                                {% set diff = now - skill.date_posted %}
+                                {% if diff.days > 0 %}
+                                    {{ diff.days }} days ago
+                                {% elif diff.seconds // 3600 > 0 %}
+                                    {{ diff.seconds // 3600 }} hours ago
+                                {% elif diff.seconds // 60 > 0 %}
+                                    {{ diff.seconds // 60 }} mins ago
+                                {% else %}
+                                    Just now
+                                {% endif %}
+                            </small>
+                        </td>
+                        <td><span class="badge bg-light text-primary border px-3 rounded-pill small">{{ skill.skill_type }}</span></td>
+                        <td><span class="fw-bold text-success">🪙 {{ skill.cost }}</span></td>
+                        <td class="text-end pe-4">
+                            <a href="#" class="btn btn-sm btn-light border text-muted rounded-circle" title="Edit Skill">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            
+                            <form action="{{ url_for('views.delete_skill', id=skill.id) }}" method="POST" class="d-inline" 
+                                  onsubmit="return confirm('Are you sure you want to delete this skill?')">
+                                <button type="submit" class="btn btn-sm btn-light border text-danger ms-1 rounded-circle" title="Delete Skill">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="fas fa-folder-open fs-1 d-block mb-3 opacity-25"></i>
+                            You haven't posted any skills yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-lift { transition: all 0.2s ease-in-out; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+    .table-hover tbody tr:hover { background-color: #f8fafc; }
+    .btn-light:hover { background-color: #f1f5f9; }
+</style>
+{% endblock %}

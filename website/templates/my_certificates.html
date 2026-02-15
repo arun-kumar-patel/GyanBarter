@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}My Certificates - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-5 animate__animated animate__fadeIn">
+        <div>
+            <a href="/dashboard" class="btn btn-light btn-sm rounded-pill px-3 mb-2 border shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Dashboard
+            </a>
+            <h2 class="fw-bold text-dark mb-1">🏅 Achievement Gallery</h2>
+            <p class="text-muted small">Your official verified collection of professional certificates.</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-success text-white rounded-pill px-4 py-2 fs-6 shadow-sm">
+                Total: {{ sessions|length }} Earned
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% if sessions %}
+            {% for req in sessions %}
+            <div class="col-md-6 col-lg-4 animate__animated animate__zoomIn" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                <div class="card border-0 shadow-sm rounded-4 h-100 certificate-card overflow-hidden">
+                    
+                    <div class="cert-header text-center py-4 border-0">
+                        <div class="position-relative d-inline-block">
+                            <i class="fas fa-award fa-4x text-warning mb-2 filter-glow"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light shadow-sm" style="font-size: 0.55rem; padding: 4px 8px;">Verified</span>
+                        </div>
+                        <h6 class="fw-bolder text-white mb-0 mt-2" style="letter-spacing: 1.5px; opacity: 1 !important;">
+                            OFFICIAL CERTIFICATE
+                        </h6>
+                    </div>
+                    
+                    <div class="card-body p-4 text-center bg-white">
+                        <h4 class="fw-bold text-dark mb-1 text-capitalize">{{ req.skill.title }}</h4>
+                        <p class="text-muted small mb-4">Mastered under the mentorship of <strong>{{ req.receiver.first_name }}</strong></p>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('views.download_certificate', req_id=req.id) }}" class="btn btn-success rounded-pill fw-bold py-2 shadow-sm hover-scale">
+                                <i class="fas fa-file-pdf me-2"></i> Download PDF
+                            </a>
+                            
+                            <div class="mt-2 p-2 bg-light rounded-3 border border-light-subtle">
+                                <small class="text-muted fw-bold d-block mb-1" style="font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;">
+                                    Verification ID
+                                </small>
+                                <span class="text-dark fw-bolder font-monospace" style="font-size: 0.75rem;">
+                                    {{ req.certificate_no if req.certificate_no else 'GB-PROCESSING-ID' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-light border-0 text-center py-2">
+                        <small class="text-muted fw-bold" style="font-size: 0.65rem;">
+                            <i class="far fa-calendar-check me-1 text-success"></i>Issued on {{ req.timestamp.strftime('%d %b, %Y') }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="opacity-25 mb-3 text-muted">
+                    <i class="fas fa-certificate fa-5x"></i>
+                </div>
+                <h4 class="text-dark fw-bold">No certificates earned yet!</h4>
+                <p class="text-muted small mb-4">Complete your first session to unlock your achievement gallery.</p>
+                <a href="/market" class="btn btn-primary rounded-pill px-5 mt-2 fw-bold shadow">Explore Skills</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* ✅ Premium Gradient & Visual Effects */
+    .cert-header {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%); /* Deep Navy Charcoal */
+        position: relative;
+    }
+    
+    .certificate-card { 
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        border: 1px solid #f1f5f9 !important; 
+    }
+    
+    .certificate-card:hover { 
+        transform: translateY(-12px); 
+        box-shadow: 0 2.5rem 5rem rgba(0,0,0,0.1) !important;
+        border-color: #10b981 !important;
+    }
+
+    .filter-glow {
+        filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.5));
+    }
+
+    .hover-scale:hover { transform: scale(1.02); transition: 0.2s; }
+    
+    .font-monospace { font-family: 'Courier New', Courier, monospace; }
+</style>
+{% endblock %}

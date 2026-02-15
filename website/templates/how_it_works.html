@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}How It Works - GyanBarter{% endblock %}
+
+{% block content %}
+
+<section class="hero-nature text-center">
+    <div class="container">
+        <span class="badge-eco mb-3">SIMPLE PROCESS</span>
+        <h1 class="hero-h1 mb-3">
+            Give Knowledge. <span class="text-highlight">Get Knowledge.</span>
+        </h1>
+        <p class="hero-p mx-auto">
+            GyanBarter is a cashless community. You earn credits by teaching what you love, 
+            and spend them to learn what you need. It's that simple.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark">Your Journey in 4 Steps</h2>
+        </div>
+
+        <div class="row g-4">
+            
+            <div class="col-md-3">
+                <div class="feature-card text-center h-100">
+                    <div class="icon-box mx-auto">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">1. Create Profile</h5>
+                    <p class="text-muted small mt-2">
+                        Sign up and list your skills. Tell us what you can teach (e.g. Python) and what you want to learn (e.g. Guitar).
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="feature-card text-center h-100">
+                    <div class="icon-box mx-auto">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">2. Post a Session</h5>
+                    <p class="text-muted small mt-2">
+                        Create a listing for your expertise. Set your availability and describe what you will teach.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="feature-card text-center h-100">
+                    <div class="icon-box mx-auto" style="background-color: #dcfce7; color: #15803d;">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">3. Teach & Earn</h5>
+                    <p class="text-muted small mt-2">
+                        Conduct the session via video call. Once done, you earn <strong>GyanCredits</strong> in your wallet.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="feature-card text-center h-100">
+                    <div class="icon-box mx-auto" style="background-color: #fff7ed; color: #f97316;">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">4. Spend & Learn</h5>
+                    <p class="text-muted small mt-2">
+                        Use your credits to book experts and learn new skills for free. The cycle continues!
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background-color: var(--nature-bg);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="fw-bold text-dark mb-3">The <span class="text-orange">GyanCredit</span> System</h2>
+                <p class="hero-p mb-4">
+                    Our economy is based on time, not money. We ensure fair exchange through a simple credit system.
+                </p>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-check-circle text-success me-3 fs-4"></i>
+                    <span class="fs-5 text-dark"><strong>1 Hour Teaching</strong> = +1 Credit Earned</span>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-minus-circle text-danger me-3 fs-4"></i>
+                    <span class="fs-5 text-dark"><strong>1 Hour Learning</strong> = -1 Credit Spent</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-gift text-primary me-3 fs-4"></i>
+                    <span class="fs-5 text-dark"><strong>Sign Up Bonus</strong> = 50 Free Credits</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 text-center">
+                <div class="feature-card d-inline-block py-5 px-5 shadow-sm">
+                    <i class="fas fa-coins text-warning display-1 mb-3"></i>
+                    <h3 class="fw-bold">1 Credit = 1 Hour</h3>
+                    <p class="text-muted mb-0">No hidden fees. 100% Transparent.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark">Frequently Asked Questions</h2>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fw-bold bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Is GyanBarter really free?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Yes! There is no real money involved. You pay with "time" (credits) which you earn by helping others.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Do I need to be an expert to teach?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Not at all! Everyone knows something. You can teach basic math, a language, painting, or even how to use Excel.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Can I buy credits with money?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                No. GyanBarter is strictly a skill-exchange platform. Credits can only be earned by teaching or community contributions.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 text-center" style="background-color: var(--nature-bg);">
+    <div class="container">
+        <h2 class="fw-bold text-dark mb-4">Ready to Start Your Journey?</h2>
+        <a href="/sign-up" class="btn-nature-primary px-5">Join Now & Get 50 Free Credits</a>
+    </div>
+</section>
+
+{% endblock %}

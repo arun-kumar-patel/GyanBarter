@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Weekly Lucky Spin - GyanBarter{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<div class="container py-5 text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="fw-bold mb-2 display-5" style="font-family: 'Outfit', sans-serif;">Weekly Lucky Spin 🎡</h1>
+            <p class="text-muted mb-5 lead">Spin the wheel every 7 days and win up to 10 free coins!</p>
+            
+            <div class="wheel-container mx-auto position-relative" style="width: 400px; height: 400px;">
+                <canvas id="wheel" width="400" height="400" style="border-radius: 50%; border: 10px solid #1e293b; box-shadow: 0 20px 50px rgba(0,0,0,0.3);"></canvas>
+                
+                <button id="spin-btn" class="btn btn-dark rounded-circle position-absolute top-50 start-50 translate-middle shadow-lg" 
+                        style="width: 100px; height: 100px; font-weight: 900; border: 6px solid white; z-index: 15; font-size: 1.2rem;">
+                    SPIN
+                </button>
+                
+                <div class="arrow position-absolute top-0 start-50 translate-middle-x" 
+                     style="width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 35px solid #dc3545; z-index: 20; margin-top: -15px;">
+                </div>
+            </div>
+
+            <div id="result-box" class="mt-5 d-none animate__animated animate__zoomIn">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-body p-5" style="background: #f0fdf4;">
+                        <h2 class="fw-bold text-success mb-3">CONGRATULATIONS! 🎉</h2>
+                        <div class="display-3 fw-bolder text-dark mb-3"><span id="won-coins">0</span> <small class="fs-4">Coins</small></div>
+                        <p class="text-muted fs-5 mb-4">Spin coins are added and will be used <strong>first</strong>.</p>
+                        <div class="badge bg-danger rounded-pill px-4 py-2 mb-4 fs-6">
+                            Expires on: <span id="expiry-date"></span>
+                        </div>
+                        <br>
+                        <a href="{{ url_for('views.dashboard') }}" class="btn btn-success rounded-pill px-5 py-3 fw-bold shadow-sm">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="spin-sound" src="{{ url_for('static', filename='sounds/spin.mpeg') }}" loop preload="auto"></audio>
+<audio id="win-sound" src="https://www.myinstants.com/media/sounds/tada.mp3" preload="auto"></audio>
+
+<script>
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const spinBtn = document.getElementById("spin-btn");
+    const spinSound = document.getElementById("spin-sound");
+    const winSound = document.getElementById("win-sound");
+
+    const sectors = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const colors = ["#166534", "#ffffff", "#166534", "#ffffff", "#166534", "#ffffff", "#166534", "#ffffff", "#166534", "#ffffff"];
+    const arc = 2 * Math.PI / sectors.length;
+
+    function drawWheel() {
+        sectors.forEach((num, i) => {
+            const angle = i * arc;
+            ctx.beginPath();
+            ctx.fillStyle = colors[i];
+            ctx.moveTo(200, 200);
+            ctx.arc(200, 200, 200, angle, angle + arc);
+            ctx.fill();
+            
+            ctx.save();
+            ctx.fillStyle = colors[i] === "#166534" ? "white" : "#166534";
+            ctx.translate(200, 200);
+            ctx.rotate(angle + arc / 2);
+            ctx.textAlign = "right";
+            ctx.font = "bold 30px sans-serif";
+            ctx.fillText(num, 180, 10);
+            ctx.restore();
+        });
+    }
+    drawWheel();
+
+    spinBtn.onclick = () => {
+        spinBtn.disabled = true;
+        
+        fetch('/spin-wheel', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.amount) {
+                // ✅ Play local spin sound
+                spinSound.currentTime = 0;
+                spinSound.volume = 1;
+                spinSound.play();
+                
+                const wonIndex = sectors.indexOf(data.amount);
+                const sectorAngle = 360 / sectors.length;
+                const finalAngle = (360 * 10) - (wonIndex * sectorAngle) - (sectorAngle / 2) - 90;
+
+                let start = null;
+                const duration = 6000;
+
+                function step(timestamp) {
+                    if (!start) start = timestamp;
+                    let progress = timestamp - start;
+                    let t = progress / duration;
+                    let easeOut = 1 - Math.pow(1 - t, 4); 
+                    let currentRotation = easeOut * finalAngle;
+                    
+                    canvas.style.transform = `rotate(${currentRotation}deg)`;
+                    
+                    // ✅ Dynamic Volume Fade: Sound gets quieter as wheel slows
+                    spinSound.volume = Math.max(0, 1 - t); 
+
+                    if (progress < duration) {
+                        requestAnimationFrame(step);
+                    } else {
+                        spinSound.pause();
+                        spinSound.currentTime = 0;
+                        
+                        // Celebrate with Confetti
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+
+                        winSound.play();
+                        document.getElementById("result-box").classList.remove("d-none");
+                        document.getElementById("won-coins").innerText = data.amount;
+                        document.getElementById("expiry-date").innerText = data.expiry;
+                    }
+                }
+                requestAnimationFrame(step);
+            } else {
+                spinBtn.disabled = false;
+                alert(data.error || "Something went wrong!");
+            }
+        });
+    };
+</script>
+
+<style>
+    .wheel-container { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.25)); }
+    #spin-btn:hover { background-color: #166534 !important; transform: translate(-50%, -50%) scale(1.1); transition: 0.2s; }
+</style>
+{% endblock %}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; padding: 0; background-color: #f1f5f9; }
+        .email-card { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 20px auto; 
+            background: #ffffff;
+            border: 1px solid #e2e8f0; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+        }
+        .header { 
+            background: linear-gradient(135deg, #166534, #15803d); 
+            color: #ffffff; 
+            padding: 40px 20px; 
+            text-align: center; 
+        }
+        .header h1 { margin: 0; font-size: 28px; font-weight: 700; color: #ffffff; }
+        .header p { margin: 8px 0 0 0; opacity: 0.95; font-size: 16px; color: #ffffff; }
+        
+        .body { padding: 35px; color: #334155; line-height: 1.6; }
+        .body h2 { color: #0f172a; margin-top: 0; font-size: 20px; text-align: center; }
+        
+        .info-box { 
+            background: #f3fbf6; 
+            border: 1px solid #a7f3d0; 
+            border-radius: 16px; 
+            padding: 20px; 
+            margin: 25px auto; 
+            width: 85%; 
+        }
+        .info-table { width: 100%; border-collapse: collapse; }
+        .info-table td { padding: 12px 5px; font-size: 14px; }
+        
+        .label-cell {
+            text-align: right;
+            font-weight: 700;
+            color: #166534;
+            width: 40%;
+            white-space: nowrap; 
+        }
+        .value-cell {
+            text-align: left;
+            color: #475569;
+            width: 60%;
+            padding-left: 10px !important;
+        }
+        .border-bottom { border-bottom: 1px dashed #cbd5e1; }
+        
+        .btn-wrapper { text-align: center; margin: 30px 0; }
+        .btn { 
+            display: inline-block; 
+            padding: 14px 35px; 
+            background-color: #166534;
+            background: linear-gradient(to right, #166534, #15803d); 
+            color: #ffffff !important; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            font-size: 15px;
+        }
+        
+        .footer { 
+            background: #f8fafc; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 12px; 
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-card">
+        <div class="header">
+            <h1>GyanBarter</h1>
+            <p>Ready to Learn? Let’s start the class. 🚀</p>
+        </div>
+
+        <div class="body">
+            <h2>Hi {{ student.first_name }},</h2>
+            <p style="text-align: center; font-size: 15px;">Great news! Your request has been <strong>Accepted</strong>. Here are the session details:</p>
+            
+            <div class="info-box">
+                <table class="info-table">
+                    <tr>
+                        <td class="label-cell border-bottom">📚 Course:</td>
+                        <td class="value-cell border-bottom">{{ skill.title }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell border-bottom">🏷️ Category:</td>
+                        <td class="value-cell border-bottom">{{ skill.category or "Education" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell border-bottom">🕒 Start Time:</td>
+                        <td class="value-cell border-bottom">
+                            {% if skill.session_start %}
+                                {{ skill.session_start.strftime('%d %b, %I:%M %p') }}
+                            {% else %}
+                                Flexible / Contact Teacher
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">⏳ Duration:</td>
+                        <td class="value-cell">{{ skill.duration or "1 Hour" }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p style="text-align: center; font-size: 15px; color: #64748b;">Click the button below to join your classroom:</p>
+            
+            <div class="btn-wrapper">
+                <a href="{{ join_url }}" class="btn">🚀 Enter Classroom Now</a>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 13px; color: #64748b; text-align: center;">
+                Happy Learning,<br>
+                <strong style="color: #166534;">Team GyanBarter</strong>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p style="margin-bottom: 4px;">Copyright © 2026 GyanBarter - All Rights Reserved.</p>
+            <p style="margin: 0;">Empowering learners, one skill at a time.</p>
+        </div>
+    </div>
+</body>
+</html>

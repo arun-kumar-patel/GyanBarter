@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - GyanBarter{% endblock %}
+
+{% block content %}
+
+<div class="container py-5 mt-4">
+
+    <div class="row mb-4 align-items-center animate__animated animate__fadeIn">
+        <div class="col-md-8">
+            <h1 class="display-6 fw-bolder text-dark mb-1">
+                Welcome back, <span style="color:#166534;">{{ user.first_name }}!</span> 👋
+            </h1>
+            <p class="text-muted fs-6 mb-0">Manage your skills, track earnings, and start learning.</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 hover-scale" 
+                 style="background:linear-gradient(135deg,#fff7ed,#ffedd5);">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="fw-bold text-warning text-uppercase" style="font-size:0.75rem;">Current Balance</small>
+                        <div class="d-flex align-items-center mt-1">
+                            <i class="fas fa-coins text-warning fs-2 me-2"></i>
+                            <h2 class="fw-bolder mb-0">{{ user.coins }}</h2>
+                        </div>
+                    </div>
+                    
+                    <a href="/profile" class="position-relative">
+                        <img src="{{ user.profile_pic if 'http' in user.profile_pic else url_for('static', filename='uploads/' + user.profile_pic) }}" 
+                             class="rounded-circle border border-3 border-white shadow-sm"
+                             style="width:64px;height:64px;object-fit:cover;"
+                             onerror="this.src='https://ui-avatars.com/api/?name={{ user.first_name }}&background=166534&color=fff'">
+                        {% if not user.is_profile_complete %}
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle animate__animated animate__pulse animate__infinite"></span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(90deg, #166534, #15803d);">
+        <div class="card-body d-flex justify-content-between align-items-center py-3 px-4">
+            <div class="text-white">
+                <h6 class="mb-0 fw-bold">🎓 My Achievement Library</h6>
+                <small class="opacity-75">View and download all your earned certificates in one place.</small>
+            </div>
+            <a href="/my-certificates" class="btn btn-light text-success fw-bold rounded-pill px-4 shadow-sm">
+                Open Gallery <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4 animate__animated animate__fadeIn">
+        <div class="col-md-3">
+            <a href="{{ url_for('views.coin_history') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 stat-card h-100 p-3 text-center transition-hover">
+                    <div class="stat-icon bg-warning-subtle text-warning mb-2 mx-auto"><i class="fas fa-coins fs-3"></i></div>
+                    <h4 class="fw-bolder mb-0 text-dark">{{ user.coins }}</h4>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.65rem;">Total Coins</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('views.my_skills') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 stat-card h-100 p-3 text-center transition-hover">
+                    <div class="stat-icon bg-primary-subtle text-primary mb-2 mx-auto"><i class="fas fa-graduation-cap fs-3"></i></div>
+                    <h4 class="fw-bolder mb-0 text-dark">{{ user.skills|length }}</h4>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.65rem;">My Skills</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('views.incoming_requests') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 stat-card h-100 p-3 text-center transition-hover border-bottom border-danger border-3">
+                    <div class="stat-icon bg-success-subtle text-success mb-2 mx-auto"><i class="fas fa-user-plus fs-3"></i></div>
+                    {% set pending_count = user.received_requests | selectattr("status", "equalto", "Pending") | list | length %}
+                    <h4 class="fw-bolder mb-0 text-dark">{{ pending_count }}</h4>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.65rem;">Admissions</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('views.my_reviews') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 stat-card h-100 p-3 text-center transition-hover">
+                    <div class="stat-icon bg-danger-subtle text-danger mb-2 mx-auto"><i class="fas fa-star fs-3"></i></div>
+                    <h4 class="fw-bolder mb-0 text-dark">{{ user.get_avg_rating() }}</h4>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.65rem;">Avg Rating</small>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-7">
+            <div class="daily-reward-box animate__animated animate__fadeInLeft h-100 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-calendar-check text-warning me-2"></i> Daily Streak</h5>
+                    <div class="badge bg-warning text-dark rounded-pill px-3">{{ user.checkin_streak }} Days 🔥</div>
+                </div>
+                <div class="streak-container">
+                    {% for i in range(1, 8) %}
+                        {% set reward_val = 1 if i <= 3 else (2 if i <= 6 else 5) %}
+                        <div class="day-circle {% if user.checkin_streak >= i %}completed{% elif user.checkin_streak == i-1 %}active{% endif %}">
+                            <span>Day {{ i }}</span>
+                            <span class="coin-val">+{{ reward_val }} 🪙</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center mt-3">
+                    {% if user.last_checkin_date == now.date() %}
+                        <button class="claim-btn disabled shadow-none" disabled>✅ Claimed Today</button>
+                    {% else %}
+                        <button class="claim-btn shadow-sm" onclick="claimDailyReward()">🎁 Claim Reward</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            {% if not user.last_spin_date or (now - user.last_spin_date).days >= 7 %}
+            <div class="card border-0 shadow rounded-4 h-100 animate__animated animate__fadeInRight" 
+                 style="background:linear-gradient(135deg,#1e293b,#334155); overflow:hidden;">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-4">
+                    <div class="bg-warning rounded-circle mb-3 d-flex justify-content-center align-items-center shadow-lg" style="width:65px; height:65px;">
+                        <i class="fas fa-dharmachakra fa-spin fs-1 text-dark"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Weekly Spin Ready!</h5>
+                    <a href="{{ url_for('views.spin_wheel') }}" class="btn btn-warning fw-bold rounded-pill px-5 hover-scale">Spin Now</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white d-flex align-items-center justify-content-center text-center p-4">
+                <i class="fas fa-history text-muted fs-1 mb-3"></i>
+                <h6 class="text-muted fw-bold">Next Spin in {{ 7 - (now - user.last_spin_date).days }} Days</h6>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-12">
+            <form id="bulkSkillDeleteForm" action="{{ url_for('views.bulk_delete_skills') }}" method="POST">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3 border-bottom">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-chalkboard-teacher me-2 text-success"></i> My Teaching Skills</h5>
+                        <div class="d-flex gap-2">
+                            <button type="button" onclick="confirmBulkSkillDelete()" id="bulk-skill-del-btn" class="btn btn-outline-danger btn-sm rounded-pill fw-bold px-4 shadow-sm" disabled>
+                                <i class="fas fa-trash-alt me-1"></i> Delete Selected (0)
+                            </button>
+                            <a href="/add-skill" class="btn btn-success btn-sm rounded-pill fw-bold px-4 shadow-sm text-white">Post New</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if user.skills %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light text-muted small fw-bold">
+                                        <tr>
+                                            <th class="ps-4" style="width: 60px;"><input class="form-check-input border-secondary" type="checkbox" id="selectAllSkillsMaster"></th>
+                                            <th>SKILL TITLE</th>
+                                            <th>CATEGORY</th>
+                                            <th>FEE</th>
+                                            <th class="text-center">MANAGE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for skill in user.skills %}
+                                        <tr>
+                                            <td class="ps-4"><input type="checkbox" name="skill_ids" value="{{ skill.id }}" class="form-check-input border-secondary individual-skill-checkbox"></td>
+                                            <td><div class="fw-bold text-dark">{{ skill.title }}</div><small class="text-muted"><i class="far fa-clock me-1"></i>{{ skill.duration }}</small></td>
+                                            <td><span class="badge bg-light text-dark border px-3 py-2 rounded-pill small">{{ skill.category if skill.category and skill.category != 'General' else "✨ General" }}</span></td>
+                                            <td><span class="text-warning fw-bold">🪙 {{ skill.cost }}</span></td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <a href="{{ url_for('views.classroom', skill_id=skill.id) }}" class="btn btn-light btn-sm rounded-circle shadow-sm" title="Open"><i class="fas fa-door-open text-primary"></i></a>
+                                                    <button type="button" onclick="singleSkillDelete('{{ skill.id }}')" class="btn btn-light btn-sm rounded-circle shadow-sm" title="Delete"><i class="fas fa-trash text-danger"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5 opacity-25"><i class="fas fa-folder-open fs-2 d-block mb-2"></i><p>No skills listed.</p></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-rocket me-2 text-info"></i> Active Learning Journey</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.sent_requests %}
+                        <div class="row g-3">
+                        {% for req in user.sent_requests %}
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-4 border shadow-sm transition-hover">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold text-dark mb-1">{{ req.skill.title }}</div>
+                                            <small class="text-muted">Instructor: {{ req.receiver.first_name }}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            {% if req.status == 'Accepted' %}
+                                                <a href="{{ url_for('views.classroom', skill_id=req.skill.id) }}" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">Join</a>
+                                                <div class="attendance-wrapper ms-2" data-req-id="{{ req.id }}">
+                                                    <div class="progress mb-1" style="height: 5px; width: 100px;"><div class="progress-bar bg-warning transition-width" style="width: 0%;"></div></div>
+                                                    <form action="{{ url_for('views.release_payment', req_id=req.id) }}" method="POST" class="m-0">
+                                                        <button type="button" class="btn btn-secondary btn-xs rounded-pill px-2 btn-locked" disabled>🔒 Locked</button>
+                                                        <button type="submit" class="btn btn-success btn-xs rounded-pill px-2 btn-unlocked d-none">🎓 Complete</button>
+                                                    </form>
+                                                </div>
+                                            {% elif req.status == 'Completed' %}
+                                                <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2 py-1 small">Completed</span>
+                                                
+                                                {% set rating_exists = req.ratings | first %}
+                                                {% if not rating_exists %}
+                                                    <button type="button" class="btn btn-warning btn-sm rounded-pill fw-bold shadow-sm ms-1" 
+                                                            data-bs-toggle="modal" data-bs-target="#ratingModal{{ req.id }}">
+                                                        <i class="fas fa-star me-1"></i> Rate Now
+                                                    </button>
+                                                {% else %}
+                                                    <span class="text-warning small fw-bold ms-2">{{ rating_exists.rating }}★</span>
+                                                {% endif %}
+
+                                                <a href="{{ url_for('views.download_certificate', req_id=req.id) }}" class="btn btn-sm btn-outline-success rounded-pill px-2 ms-1" title="Certificate"><i class="fas fa-award"></i></a>
+                                            {% else %}
+                                                <span class="badge bg-secondary rounded-pill px-3 small">{{ req.status }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4 text-muted small"><p>Enroll in a skill to begin!</p></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for req in user.sent_requests %}
+    {% if req.status == 'Completed' %}
+    <div class="modal fade" id="ratingModal{{ req.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="fw-bold text-dark w-100 text-center mt-3">Rate {{ req.receiver.first_name }} 🌟</h5>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('views.submit_rating', req_id=req.id) }}" method="POST">
+                    <div class="modal-body text-center px-4 pt-0">
+                        <p class="text-muted small">Share your experience with "{{ req.skill.title }}"</p>
+                        <div class="star-rating mb-4">
+                            <input type="radio" id="5-stars-{{req.id}}" name="rating" value="5" required />
+                            <label for="5-stars-{{req.id}}" class="fas fa-star"></label>
+                            <input type="radio" id="4-stars-{{req.id}}" name="rating" value="4" />
+                            <label for="4-stars-{{req.id}}" class="fas fa-star"></label>
+                            <input type="radio" id="3-stars-{{req.id}}" name="rating" value="3" />
+                            <label for="3-stars-{{req.id}}" class="fas fa-star"></label>
+                            <input type="radio" id="2-stars-{{req.id}}" name="rating" value="2" />
+                            <label for="2-stars-{{req.id}}" class="fas fa-star"></label>
+                            <input type="radio" id="1-star-{{req.id}}" name="rating" value="1" />
+                            <label for="1-star-{{req.id}}" class="fas fa-star"></label>
+                        </div>
+                        <textarea name="review" class="form-control rounded-3 border-light bg-light p-3" rows="3" placeholder="Write a brief review... (Optional)"></textarea>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-2 shadow">Submit Rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+
+<form id="masterSingleDeleteForm" method="POST" action="" style="display:none;"></form>
+
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        /* ✅ BULK DELETE LOGIC */
+        const masterCheck = document.getElementById('selectAllSkillsMaster');
+        const skillChecks = document.querySelectorAll('.individual-skill-checkbox');
+        const bulkBtn = document.getElementById('bulk-skill-del-btn');
+
+        function updateBulkBtnUI() {
+            const count = Array.from(skillChecks).filter(c => c.checked).length;
+            if (!bulkBtn) return;
+            bulkBtn.disabled = count === 0;
+            bulkBtn.classList.toggle('btn-outline-danger', count === 0);
+            bulkBtn.classList.toggle('btn-danger', count > 0);
+            bulkBtn.innerHTML = `<i class="fas fa-trash-alt me-1"></i> Delete Selected (${count})`;
+        }
+
+        if (masterCheck) {
+            masterCheck.addEventListener('change', () => {
+                skillChecks.forEach(cb => cb.checked = masterCheck.checked);
+                updateBulkBtnUI();
+            });
+        }
+        skillChecks.forEach(cb => cb.addEventListener('change', updateBulkBtnUI));
+
+        /* ✅ ATTENDANCE POLLING */
+        function pollAttendance() {
+            document.querySelectorAll('.attendance-wrapper').forEach(wrapper => {
+                const reqId = wrapper.getAttribute('data-req-id');
+                fetch(`/api/check-status/${reqId}`).then(res => res.json()).then(data => {
+                    const pb = wrapper.querySelector('.progress-bar');
+                    if (pb) pb.style.width = data.progress + "%";
+                    if (data.is_unlocked) {
+                        pb?.classList.replace('bg-warning', 'bg-success');
+                        wrapper.querySelector('.btn-locked')?.classList.add('d-none');
+                        wrapper.querySelector('.btn-unlocked')?.classList.remove('d-none');
+                    }
+                    if (data.status === 'Completed') location.reload();
+                });
+            });
+        }
+        pollAttendance();
+        setInterval(pollAttendance, 8000);
+    });
+
+    function claimDailyReward() {
+        fetch('/daily-checkin', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+            .then(res => res.json()).then(data => {
+                if (data.status === 'success') {
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                    setTimeout(() => { location.reload(); }, 1200);
+                } else alert("⚠️ " + data.message);
+            });
+    }
+
+    function confirmBulkSkillDelete() {
+        if (confirm("🚨 IMPORTANT: Delete ALL selected skills? This is permanent.")) {
+            document.getElementById('bulkSkillDeleteForm').submit();
+        }
+    }
+
+    function singleSkillDelete(skillId) {
+        if (confirm("Delete this listing?")) {
+            const form = document.getElementById('masterSingleDeleteForm');
+            form.action = "/delete-skill/" + skillId;
+            form.submit();
+        }
+    }
+</script>
+{% endblock %}
+
+<style>
+    .stat-card { transition: 0.3s; cursor: pointer; border: 1px solid #f1f5f9 !important; }
+    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important; background-color: #f8fafc; }
+    .stat-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+    .daily-reward-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; }
+    .streak-container { display: flex; justify-content: center; gap: 10px; margin: 15px 0; overflow-x: auto; }
+    .day-circle { min-width: 55px; height: 55px; border-radius: 50%; background: #fff; border: 2px solid #f1f5f9; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 800; color: #94a3b8; }
+    .day-circle.active { border-color: #f59e0b; background: #fffbeb; color: #f59e0b; }
+    .day-circle.completed { background: #10b981; border-color: #059669; color: #fff; }
+    .claim-btn { background: linear-gradient(45deg, #166534, #15803d); color: #fff; border: none; padding: 12px 50px; font-weight: bold; border-radius: 50px; }
+    .claim-btn.disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+    
+    /* ⭐ Star Rating System Styles */
+    .star-rating { display: flex; flex-direction: row-reverse; justify-content: center; }
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 2.2rem; color: #e2e8f0; cursor: pointer; transition: 0.2s; padding: 0 5px; }
+    .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label { color: #f59e0b; }
+
+    .btn-xs { padding: 4px 10px; font-size: 0.6rem; font-weight: bold; }
+    .transition-hover:hover { background-color: #fff !important; transform: scale(1.02); transition: 0.2s; }
+</style>
+
+{% endblock %}

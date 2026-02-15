@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="text-center mb-5 animate__animated animate__fadeInDown">
+        <h1 class="fw-bold display-4">🏆 Gyan <span class="text-success">Masters</span></h1>
+        <p class="text-muted">The best teachers and learners on GyanBarter</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-coins text-warning me-2"></i> Gyan Masters (Top Coins)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Rank</th>
+                                    <th>User</th>
+                                    <th class="text-end pe-4">Total Coins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for master in top_earners %}
+                                <tr>
+                                    <td class="ps-4">
+                                        {% if loop.index == 1 %} <span class="fs-4">🥇</span>
+                                        {% elif loop.index == 2 %} <span class="fs-4">🥈</span>
+                                        {% elif loop.index == 3 %} <span class="fs-4">🥉</span>
+                                        {% else %} <span class="fw-bold text-muted ms-2">{{ loop.index }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="{{ url_for('views.public_profile', username=master.username) }}">
+                                                <img src="{{ master.profile_pic if 'http' in master.profile_pic else url_for('static', filename='uploads/' + master.profile_pic) }}" 
+                                                     class="rounded-circle me-3 border shadow-sm" style="width: 40px; height: 40px; object-fit: cover;"
+                                                     onerror="this.src='https://ui-avatars.com/api/?name={{ master.first_name }}'">
+                                            </a>
+                                            <div>
+                                                <a href="{{ url_for('views.public_profile', username=master.username) }}" class="text-decoration-none text-dark fw-bold d-block">{{ master.first_name }}</a>
+                                                <small class="text-muted">@{{ master.username }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end pe-4 fw-bold text-success">{{ master.coins }} 🪙</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-success text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-star text-warning me-2"></i> Top Rated Teachers</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Rank</th>
+                                    <th>Teacher</th>
+                                    <th class="text-end pe-4">Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for teacher in top_rated %}
+                                <tr>
+                                    <td class="ps-4">
+                                        {% if loop.index == 1 %} <span class="fs-4">🥇</span>
+                                        {% elif loop.index == 2 %} <span class="fs-4">🥈</span>
+                                        {% elif loop.index == 3 %} <span class="fs-4">🥉</span>
+                                        {% else %} <span class="fw-bold text-muted ms-2">{{ loop.index }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="{{ url_for('views.public_profile', username=teacher.username) }}">
+                                                <img src="{{ teacher.profile_pic if 'http' in teacher.profile_pic else url_for('static', filename='uploads/' + teacher.profile_pic) }}" 
+                                                     class="rounded-circle me-3 border shadow-sm" style="width: 40px; height: 40px; object-fit: cover;"
+                                                     onerror="this.src='https://ui-avatars.com/api/?name={{ teacher.first_name }}'">
+                                            </a>
+                                            <div>
+                                                <a href="{{ url_for('views.public_profile', username=teacher.username) }}" class="text-decoration-none text-dark fw-bold d-block">{{ teacher.first_name }}</a>
+                                                <small class="text-primary small">@{{ teacher.username }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <span class="badge bg-warning text-dark rounded-pill px-3">
+                                            <i class="fas fa-star me-1"></i> {{ teacher.get_avg_rating() }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-hover tbody tr {
+        transition: all 0.2s ease;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f1f5f9;
+        transform: scale(1.005);
+    }
+    .card {
+        transition: transform 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}

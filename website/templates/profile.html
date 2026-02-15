@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-5">
+                <div class="card-header bg-primary text-white text-center py-4 border-0">
+                    <h3 class="fw-bold m-0"><i class="fas fa-user-edit me-2"></i>Edit Profile</h3>
+                </div>
+                
+                <div class="card-body p-5">
+                    <form method="POST" enctype="multipart/form-data">
+                        
+                        <div class="text-center mb-4">
+                            <div class="position-relative d-inline-block">
+                                {# ✅ NEW: Using the central get_profile_image logic #}
+                                <img src="{{ user.get_profile_image() }}" 
+                                     alt="Profile" 
+                                     id="profile-preview"
+                                     class="rounded-circle shadow-sm border border-3 border-white"
+                                     style="width: 150px; height: 150px; object-fit: cover;"
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ user.first_name[0]|upper if user.first_name else 'G' }}&background=random&color=fff&bold=true'">
+                                
+                                <input type="file" name="profile_pic" id="profile_pic" class="d-none" accept="image/*" onchange="previewImage(event)">
+                                
+                                <label for="profile_pic" 
+                                       class="position-absolute bottom-0 end-0 bg-warning text-dark rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                                       style="width: 40px; height: 40px; cursor: pointer; border: 2px solid white;">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
+                                    <i class="fas fa-star text-warning me-1"></i> 
+                                    <span class="fw-bold">{{ user.get_avg_rating() }}</span> 
+                                    <span class="text-muted ms-1">({{ user.reviews_received|length }} Reviews)</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-at text-muted"></i></span>
+                                    <input type="text" id="username" name="username" class="form-control bg-light border-start-0 shadow-none" 
+                                           value="{{ user.username if user.username else '' }}" 
+                                           placeholder="Choose a unique username" autocomplete="off" required>
+                                </div>
+                                <div id="username-feedback" class="small mt-1 fw-bold"></div> 
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary">Date of Birth</label>
+                                <input type="date" name="dob" class="form-control bg-light shadow-none" value="{{ user.dob }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary">Bio / About Me</label>
+                                <textarea name="bio" class="form-control bg-light shadow-none" rows="3" 
+                                          placeholder="Tell everyone what you can teach...">{{ user.bio }}</textarea>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary d-block">Gender</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" value="Male" id="m" {{ 'checked' if user.gender == 'Male' }}>
+                                        <label class="form-check-label" for="m">Male</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" value="Female" id="f" {{ 'checked' if user.gender == 'Female' }}>
+                                        <label class="form-check-label" for="f">Female</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" value="Other" id="o" {{ 'checked' if user.gender == 'Other' }}>
+                                        <label class="form-check-label" for="o">Other</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" id="save-btn" class="btn btn-primary btn-lg fw-bold shadow-sm rounded-pill py-3">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-comments text-primary me-2"></i>What Students Say</h4>
+                {% if user.reviews_received %}
+                    <div class="row g-3">
+                        {% for r in user.reviews_received %}
+                        <div class="col-12 animate__animated animate__fadeInUp">
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white hover-review">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="text-warning">
+                                        {% for i in range(r.rating) %}<i class="fas fa-star"></i>{% endfor %}
+                                        {% for i in range(5 - r.rating) %}<i class="far fa-star text-muted"></i>{% endfor %}
+                                    </div>
+                                    <small class="text-muted fw-bold">{{ r.timestamp.strftime('%d %b, %Y') }}</small>
+                                </div>
+                                <p class="mb-0 text-dark" style="font-style: italic; line-height: 1.6;">"{{ r.review or 'Teacher was great! No written comment provided.' }}"</p>
+                                <div class="mt-3 d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.7rem;">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                    <span class="ms-2 small text-muted">Verified Student</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+                        <i class="fas fa-star-half-alt text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <h5 class="text-muted">No reviews yet</h5>
+                        <p class="small text-muted mb-0">Complete your first session to receive feedback!</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const usernameInput = document.getElementById('username');
+    const feedback = document.getElementById('username-feedback');
+    const saveBtn = document.getElementById('save-btn');
+
+    // 📸 1. Image Preview
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('profile-preview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // 🔍 2. Real-time Username Validation
+    usernameInput.addEventListener('input', function() {
+        const username = this.value.trim().toLowerCase();
+        
+        if(username.length < 3) {
+            feedback.innerHTML = "❌ Minimum 3 characters required";
+            feedback.style.color = "#6c757d";
+            usernameInput.classList.remove('is-valid', 'is-invalid');
+            return;
+        }
+
+        fetch('/check-username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.available || username === "{{ user.username|lower }}") {
+                usernameInput.classList.remove('is-invalid');
+                usernameInput.classList.add('is-valid');
+                feedback.innerHTML = "✅ Username available";
+                feedback.style.color = "#10b981";
+                saveBtn.disabled = false;
+            } else {
+                usernameInput.classList.remove('is-valid');
+                usernameInput.classList.add('is-invalid');
+                feedback.innerHTML = "❌ Already taken by someone else";
+                feedback.style.color = "#ef4444";
+                saveBtn.disabled = true;
+            }
+        });
+    });
+</script>
+
+<style>
+    .hover-review { transition: all 0.3s ease; border: 1px solid transparent !important; }
+    .hover-review:hover { transform: translateY(-5px); border-color: #0d6efd !important; box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important; }
+    .is-valid { border-color: #10b981 !important; }
+    .is-invalid { border-color: #ef4444 !important; }
+    .input-group-text { border: 1px solid #dee2e6; border-right: none; }
+</style>
+{% endblock %}

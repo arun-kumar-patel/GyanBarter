@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block title %}Classroom - {{ skill.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 mt-5" style="background-color: #f8f9fa; min-height: 100vh;">
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="height: 85vh; display: flex; flex-direction: column;">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success rounded-circle me-2 pulse-animation" style="width: 12px; height: 12px;"></div>
+                        <div>
+                            <h5 class="mb-0 fw-bold">{{ skill.title }}</h5>
+                            <small class="text-muted">Instructor: {{ skill.author.first_name }} {% if is_teacher %}(You){% endif %}</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        {% if is_teacher %}
+                            {% if skill.meeting_link and skill.meeting_link.strip() %}
+                                <a href="{{ skill.meeting_link }}" target="_blank" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
+                                    <i class="fas fa-play-circle me-2"></i> Start Live Class
+                                </a>
+                            {% else %}
+                                <span class="badge bg-warning text-dark rounded-pill px-3 shadow-sm d-flex align-items-center">
+                                    <i class="fas fa-exclamation-triangle me-2"></i> Add link below to start
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <div id="student-header-btn">
+                                {% if skill.meeting_link and skill.meeting_link.strip() %}
+                                    <a href="{{ url_for('views.join_external_meeting', req_id=req.id if req else 0) }}" target="_blank" 
+                                       class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="startClassSession()">
+                                        <i class="fas fa-video me-2"></i> Join Live Class Now
+                                    </a>
+                                {% else %}
+                                    <span class="badge bg-secondary rounded-pill px-3 shadow-sm">Waiting for Instructor link...</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-body overflow-auto p-4 bg-light" id="chat-box" style="flex-grow: 1; min-height: 0;">
+                    {% for msg in messages %}
+                        <div class="d-flex mb-3 flex-column {{ 'align-items-end' if msg.sender_id == user.id else 'align-items-start' }}">
+                            <small class="mb-1 px-1 fw-bold" style="font-size: 0.7rem; color: #64748b;">
+                                {{ 'You' if msg.sender_id == user.id else msg.sender_display }}
+                            </small>
+                            <div class="p-3 rounded-4 shadow-sm text-break" 
+                                 style="max-width: 75%; background: {{ '#2563eb; color:white;' if msg.sender_id == user.id else ('#dcfce7; color:#14532d; border:1px solid #86efac;' if msg.sender_id == skill.user_id else 'white; border:1px solid #e2e8f0;') }}">
+                                {{ msg.content }}
+                            </div>
+                            <small class="text-muted mt-1" style="font-size: 0.65rem;">{{ msg.timestamp.strftime('%H:%M') }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="card-footer bg-white border-top p-3">
+                    <form id="message-form" class="d-flex gap-2">
+                        <input type="text" id="message-input" class="form-control rounded-pill border-0 bg-light px-4 py-3 shadow-none" placeholder="Type a message..." autocomplete="off" required>
+                        <button type="submit" class="btn btn-primary rounded-circle p-3 shadow-sm hover-scale"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 mb-4 bg-dark text-white text-center p-4">
+                <small class="text-uppercase opacity-75 fw-bold letter-spacing-1">Live Session Timer</small>
+                <h2 id="session-timer" class="display-6 fw-bold my-2 {% if req and req.is_session_active %}text-warning{% else %}text-white-50{% endif %}">00:00:00</h2>
+                
+                {% if req %}
+                    <div class="mb-2">
+                        <span id="attendance-badge" class="badge bg-secondary rounded-pill transition-all p-2 px-3">
+                            <i class="fas fa-clock me-1"></i> Attended: <span id="attended-minutes" class="fw-bold fs-6">{{ req.attendance_minutes }}</span> / {{ skill.duration_minutes }} mins
+                        </span>
+                    </div>
+                {% endif %}
+
+                <div class="mt-3">
+                    {% if is_teacher %}
+                        <button onclick="teacherEndClass()" class="btn {% if req and req.is_session_active %}btn-danger{% else %}btn-secondary disabled{% endif %} w-100 rounded-pill py-2 shadow-sm fw-bold">
+                            <i class="fas fa-stop-circle me-2"></i> End Class For All
+                        </button>
+                    {% else %}
+                        <button id="action-btn" onclick="handleStudentLeave()" class="btn {% if req and req.is_session_active %}btn-outline-light{% else %}btn-outline-secondary disabled{% endif %} w-100 rounded-pill py-2 fw-bold">
+                            <i class="fas fa-sign-out-alt me-2"></i> Leave & Complete
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3 border-0 pb-0">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-folder-open me-2 text-primary"></i> Learning Resources</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <label class="small fw-bold text-muted mb-2 text-uppercase">1. Live Meeting Link</label>
+                        {% if is_teacher %}
+                            <form action="{{ url_for('views.update_class_resources', skill_id=skill.id) }}" method="POST">
+                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                    <input type="text" name="meeting_link" class="form-control border-0 bg-light px-3" 
+                                           placeholder="Paste Link here" value="{{ skill.meeting_link or '' }}">
+                                    <button class="btn btn-primary px-3" type="submit" name="action" value="save_zoom">Save</button>
+                                    {% if skill.meeting_link %}
+                                    <button type="submit" name="action" value="delete_zoom" class="btn btn-outline-danger border-0" onclick="return confirm('Delete Link?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        {% else %}
+                            <div id="student-zoom-link-area">
+                                {% if skill.meeting_link %}
+                                    <a href="{{ skill.meeting_link }}" target="_blank" class="btn btn-success w-100 rounded-3 fw-bold shadow-sm">
+                                        <i class="fas fa-video me-2"></i> Open Meeting Link
+                                    </a>
+                                {% else %}
+                                    <p class="text-muted small text-center mb-0 border p-2 rounded-3 bg-light">Waiting for link...</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <hr class="opacity-10">
+
+                    <div class="mt-4">
+                        <label class="small fw-bold text-muted mb-2 text-uppercase">2. Session Materials</label>
+                        {% if is_teacher %}
+                            <form action="{{ url_for('views.update_class_resources', skill_id=skill.id) }}" method="POST">
+                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                    <input type="text" name="drive_link" class="form-control border-0 bg-light px-3" 
+                                           placeholder="Paste Drive link" value="{{ req.drive_link if req and req.drive_link else '' }}">
+                                    <button class="btn btn-success px-3" type="submit" name="action" value="save_drive">Save</button>
+                                    {% if req and req.drive_link %}
+                                    <button type="submit" name="action" value="delete_drive" class="btn btn-outline-danger border-0" onclick="return confirm('Delete Notes?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        {% else %}
+                            <div id="student-drive-link-area">
+                                {% if req and req.drive_link %}
+                                    <a href="{{ req.drive_link }}" target="_blank" class="btn btn-outline-primary w-100 rounded-3 fw-bold">
+                                        <i class="fas fa-file-pdf me-2"></i> Download Materials
+                                    </a>
+                                {% else %}
+                                    <p class="text-muted small text-center mb-0 border p-2 rounded-3 bg-light">No materials shared yet.</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    var room = "{{ skill.id }}";
+    var user_id = "{{ user.id }}";
+    var teacher_id = "{{ skill.user_id }}";
+    var req_id = "{{ req.id if req else 0 }}"; // ✅ SAFE req_id definition
+    var is_teacher = {{ 'true' if is_teacher else 'false' }};
+    var totalDuration = {{ skill.duration_minutes }};
+    var isLeavingManually = false; 
+
+    socket.on('connect', function() { socket.emit('join', {room: room}); scrollToBottom(); });
+
+    // ✅ FIXED: Resource Sync withreq_id variable (avoid Jinja re-render crash)
+    socket.on('resource_updated', function(data) {
+        if(!is_teacher) {
+            if(data.type === 'zoom') {
+                const headerBtn = document.getElementById('student-header-btn');
+                const linkArea = document.getElementById('student-zoom-link-area');
+                if(data.link) {
+                    // Safe use of the pre-defined req_id variable
+                    const joinUrl = `/join-meeting/${req_id}`;
+                    if(headerBtn) headerBtn.innerHTML = `<a href="${joinUrl}" target="_blank" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="startClassSession()"><i class="fas fa-video me-2"></i> Join Live Class Now</a>`;
+                    if(linkArea) linkArea.innerHTML = `<a href="${data.link}" target="_blank" class="btn btn-success w-100 rounded-3 fw-bold shadow-sm"><i class="fas fa-video me-2"></i> Open Meeting Link</a>`;
+                } else {
+                    if(headerBtn) headerBtn.innerHTML = `<span class="badge bg-secondary rounded-pill px-3 shadow-sm">Waiting for Instructor link...</span>`;
+                    if(linkArea) linkArea.innerHTML = `<p class="text-muted small text-center mb-0 border p-2 rounded-3 bg-light">Waiting for link...</p>`;
+                }
+            } else if(data.type === 'drive') {
+                const driveArea = document.getElementById('student-drive-link-area');
+                if(driveArea) driveArea.innerHTML = data.link ? `<a href="${data.link}" target="_blank" class="btn btn-outline-primary w-100 rounded-3 fw-bold"><i class="fas fa-file-pdf me-2"></i> Download Materials</a>` : `<p class="text-muted small text-center mb-0 border p-2 rounded-3 bg-light">No materials shared yet.</p>`;
+            }
+        }
+    });
+
+    // 🕒 TIMER: UTC Sync & Stopping logic
+    {% if req and req.is_session_active and req.session_start_time %}
+        var startStr = "{{ req.session_start_time.isoformat() }}Z"; 
+        var startTime = new Date(startStr).getTime();
+        
+        var timerInterval = setInterval(function() {
+            var now = new Date().getTime();
+            var diff = now - startTime;
+            var attendedMins = parseInt(document.getElementById('attended-minutes').innerText);
+
+            if (attendedMins >= totalDuration) {
+                // ✅ Session Target Reached
+                clearInterval(timerInterval);
+                document.getElementById("session-timer").classList.replace("text-warning", "text-success");
+                
+                const actionBtn = document.getElementById("action-btn");
+                if (actionBtn && !is_teacher) {
+                    actionBtn.innerHTML = '<i class="fas fa-certificate me-2"></i> Submit & Get Certificate';
+                    actionBtn.classList.replace("btn-outline-light", "btn-success");
+                    actionBtn.classList.add("pulse-animation");
+                }
+            } else if (diff >= 0) {
+                var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+                document.getElementById("session-timer").innerHTML = (h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+                document.getElementById("session-timer").classList.add("text-warning");
+            }
+        }, 1000);
+    {% endif %}
+
+    // 🛡️ Attendance Heartbeat
+    if (!is_teacher && req_id != "0") {
+        setInterval(function() {
+            var logUrl = `/log-attendance/${req_id}`;
+            fetch(logUrl, { method: "POST" })
+            .then(res => res.json()).then(data => {
+                if(data.status === 'success') {
+                    document.getElementById('attended-minutes').innerText = data.current_minutes;
+                }
+            });
+        }, 60000);
+    }
+
+    // 💬 Chat Logic (Original)
+    socket.on('receive_group_message', function(data) {
+        var chatBox = document.getElementById('chat-box');
+        var isMe = (data.sender_id == user_id);
+        var bg = isMe ? '#2563eb; color:white;' : (data.sender_id == teacher_id ? '#dcfce7; color:#14532d; border:1px solid #86efac;' : 'white; border:1px solid #e2e8f0;');
+        var html = `<div class="d-flex flex-column mb-3 ${isMe?'align-items-end':'align-items-start'}">
+            <small class="mb-1 fw-bold" style="font-size:0.65rem; color: #64748b;">${isMe?'You':data.sender_name}</small>
+            <div class="p-3 rounded-4 shadow-sm" style="max-width: 75%; background: ${bg}">${data.msg}</div>
+            <small class="text-muted mt-1" style="font-size:0.6rem;">${data.timestamp}</small>
+        </div>`;
+        chatBox.insertAdjacentHTML('beforeend', html); 
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    document.getElementById('message-form').addEventListener('submit', function(e) {
+        e.preventDefault(); 
+        var input = document.getElementById('message-input');
+        if(input.value.trim()) { socket.emit('send_group_message', {msg: input.value, skill_id: room}); input.value = ''; }
+    });
+
+    function scrollToBottom() { var cb = document.getElementById('chat-box'); cb.scrollTop = cb.scrollHeight; }
+    function startClassSession() { setTimeout(() => { location.reload(); }, 2000); }
+
+    function handleStudentLeave() {
+        const actionBtn = document.getElementById("action-btn");
+        const isReady = actionBtn.innerText.includes("Certificate");
+        if(confirm(isReady ? "Submit attendance and claim your certificate?" : "Leave early? (A penalty may apply)")) {
+            isLeavingManually = true; // ✅ Block generic socket alert
+            fetch(`/leave-class/${req_id}`, { method: "POST" })
+            .then(() => window.location.href = "{{ url_for('views.dashboard') }}");
+        }
+    }
+
+    function teacherEndClass() {
+        if(confirm("End session for everyone?")) {
+            isLeavingManually = true;
+            fetch(`/leave-class/${req_id}`, { method: "POST" })
+            .then(() => window.location.href = "{{ url_for('views.dashboard') }}");
+        }
+    }
+
+    // ✅ FIXED: Prevent alert spam if user is already navigating away
+    socket.on('session_ended', function() {
+        if (!isLeavingManually) {
+            alert("📢 The session activity has ended. Redirecting to your dashboard...");
+            window.location.href = "{{ url_for('views.dashboard') }}";
+        }
+    });
+</script>
+
+<style>
+    .pulse-animation { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); } }
+    .hover-scale:hover { transform: scale(1.1); transition: 0.2s; }
+    #chat-box::-webkit-scrollbar { width: 5px; }
+    #chat-box::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+</style>
+{% endblock %}

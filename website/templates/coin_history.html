@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Wallet & History - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-white animate__animated animate__fadeIn" 
+                 style="background: linear-gradient(135deg, #166534 0%, #15803d 100%);">
+                <div class="card-body p-5 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="opacity-75 mb-1 text-uppercase tracking-wider">Current Balance</h6>
+                        <h1 class="display-3 fw-bold mb-0">
+                            <i class="fas fa-coins text-warning me-2"></i>{{ user.coins }}
+                        </h1>
+                    </div>
+                    <div class="text-end opacity-25 d-none d-md-block">
+                        <i class="fas fa-wallet fa-5x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="fas fa-file-invoice me-2 text-success"></i>Download Statement
+                    </h5>
+                </div>
+                <div class="card-body bg-light rounded-bottom-4">
+                    <form action="{{ url_for('views.download_statement') }}" method="POST">
+                        
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Quick Select Period</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <input type="radio" class="btn-check" name="quick_filter" id="last15" value="15" autocomplete="off">
+                                <label class="btn btn-outline-success rounded-pill btn-sm px-3 fw-bold" for="last15">Last 15 Days</label>
+
+                                <input type="radio" class="btn-check" name="quick_filter" id="last30" value="30" autocomplete="off" checked>
+                                <label class="btn btn-outline-success rounded-pill btn-sm px-3 fw-bold" for="last30">Last 30 Days</label>
+
+                                <input type="radio" class="btn-check" name="quick_filter" id="last90" value="90" autocomplete="off">
+                                <label class="btn btn-outline-success rounded-pill btn-sm px-3 fw-bold" for="last90">Last 3 Months</label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-4">
+                            <hr class="flex-grow-1 opacity-10">
+                            <span class="mx-3 small text-muted fw-bold">OR CUSTOM DATE RANGE</span>
+                            <hr class="flex-grow-1 opacity-10">
+                        </div>
+
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold text-muted">Start Date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="far fa-calendar-alt"></i></span>
+                                    <input type="date" name="start_date" class="form-control border-start-0 ps-0 shadow-none">
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold text-muted">End Date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="far fa-calendar-alt"></i></span>
+                                    <input type="date" name="end_date" class="form-control border-start-0 ps-0 shadow-none">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-dark w-100 fw-bold shadow-sm py-2">
+                                    <i class="fas fa-print me-2"></i> Print
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h5 class="mb-3 fw-bold text-dark d-flex align-items-center">
+                <i class="fas fa-history me-2 text-primary"></i>Recent Activity
+            </h5>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="py-3 ps-4 text-uppercase small text-muted fw-bold">Date & Time</th>
+                                <th class="py-3 text-uppercase small text-muted fw-bold">Description</th>
+                                <th class="py-3 pe-4 text-end text-uppercase small text-muted fw-bold">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if history %}
+                                {% for log in history %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">{{ log.timestamp.strftime('%d %b %Y') }}</div>
+                                        <small class="text-muted">{{ log.timestamp.strftime('%I:%M %p') }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold text-dark">{{ log.transaction_type }}</div>
+                                        {% if log.reference_id %}
+                                            <small class="text-muted">Ref: #{{ log.reference_id }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        {% if log.amount > 0 %}
+                                            <div class="text-success fw-bold fs-5">+{{ log.amount }}</div>
+                                            <span class="badge bg-success-subtle text-success rounded-pill px-2" style="font-size: 0.65rem;">CREDIT</span>
+                                        {% else %}
+                                            <div class="text-danger fw-bold fs-5">{{ log.amount }}</div>
+                                            <span class="badge bg-danger-subtle text-danger rounded-pill px-2" style="font-size: 0.65rem;">DEBIT</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-5">
+                                        <div class="text-muted opacity-25 mb-3">
+                                            <i class="fas fa-receipt fa-4x"></i>
+                                        </div>
+                                        <h6 class="text-muted fw-bold">No transactions found.</h6>
+                                        <p class="small text-muted">Play the Spin Wheel or teach a skill to earn coins!</p>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .table-hover tbody tr:hover { background-color: #f8fafc; transition: 0.2s ease; }
+    .btn-outline-success:hover { color: white !important; }
+    input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
+</style>
+{% endblock %}

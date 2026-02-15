@@ -1,0 +1,644 @@
+{% extends "base.html" %}
+{% block title %}GyanBarter | Organic Skill Exchange{% endblock %}
+{% block content %}
+
+<!-- ================= HERO SECTION ================= -->
+<section class="position-relative w-100 d-flex align-items-center overflow-hidden"
+        style="min-height: 95vh;
+               background: linear-gradient(to right, #fffbeb 30%, #fef3c7 60%, rgba(254,243,199,0.15) 100%),
+               url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')
+               center/cover no-repeat;
+               margin-top:-76px; padding-top:76px;">
+
+    <div class="container position-relative z-3 py-5">
+        <div class="row">
+            <div class="col-lg-7 col-xl-6 animate__animated animate__fadeInLeft">
+
+                <div class="d-inline-flex align-items-center glass-badge-creamy rounded-pill px-4 py-2 mb-4 fw-bold small shadow-lg floating-animation">
+    <span class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-2 shadow-sm"
+          style="width:24px;height:24px;font-size:13px;">
+        📘
+    </span>
+    <span class="text-brown">100% FREE LEARNING</span>
+</div>
+
+
+
+
+                <h1 class="display-3 mb-4 text-dark fw-bolder"
+                    style="line-height:1.1;letter-spacing:-1.5px;">
+                    Grow your skills <br>
+                    <span class="text-highlight-creamy">naturally,</span><br>
+                    without spending money.
+                </h1>
+
+                <p class="lead mb-5 text-secondary fw-normal"
+                   style="font-size:1.3rem;max-width:550px;">
+                    Join the barter revolution. Swap <strong>Python</strong> for <strong>Guitar</strong>,
+                    or <strong>Design</strong> for <strong>Data Science</strong>.
+                    Pure knowledge exchange using
+                    <span class="badge bg-dark text-warning px-3 py-2 shadow-3d">
+                        GyanCoins 🪙
+                    </span>
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mt-4 animate__animated animate__fadeInUp" style="animation-delay: 0.8s;">
+    {% if current_user.is_authenticated %}
+        <a href="/market" class="btn btn-dark btn-lg rounded-pill px-4 py-3 fw-bold shadow-lg animate__animated animate__pulse animate__infinite">
+            Start Exchanging <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+        
+        <a href="/add-skill" class="btn btn-outline-dark btn-lg rounded-pill px-4 py-3 fw-bold">
+            Share Your Skill <i class="fas fa-plus-circle ms-2"></i>
+        </a>
+    {% else %}
+        <a href="/sign-up" class="btn btn-dark btn-lg rounded-pill px-4 py-3 fw-bold shadow-lg">
+            Get Started Now <i class="fas fa-rocket ms-2"></i>
+        </a>
+        <a href="/market" class="btn btn-outline-dark btn-lg rounded-pill px-4 py-3 fw-bold">
+            Explore Skills
+        </a>
+    {% endif %}
+</div>
+
+                <div class="mt-5 p-3 d-inline-flex gap-4 glass-card-creamy rounded-4
+                            border border-warning border-opacity-10
+                            animate__animated animate__fadeInUp animate__delay-2s">
+
+                    <div class="d-flex align-items-center text-dark small fw-bold">
+                        <i class="fas fa-check-circle text-success me-2 fs-5"></i> No Money
+                    </div>
+                    <div class="d-flex align-items-center text-dark small fw-bold border-start ps-4">
+                        <i class="fas fa-shield-alt text-success me-2 fs-5"></i> Verified Pros
+                    </div>
+                    <div class="d-flex align-items-center text-dark small fw-bold border-start ps-4">
+                        <i class="fas fa-users text-success me-2 fs-5"></i> 15k+ Community
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- WAVES -->
+    <div class="position-absolute bottom-0 start-0 w-100 overflow-hidden" style="line-height:0;z-index:1;">
+        <svg width="100%" height="100px" viewBox="0 0 1200 120" preserveAspectRatio="none"
+             style="opacity:.3;transform:translateY(15px);">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86
+                     82.39-16.72,168.19-17.73,250.45-.39
+                     C823.78,31,906.67,72,985.66,92.83
+                     c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35z"
+                  fill="#ffffff"></path>
+        </svg>
+        <svg width="100%" height="70px" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86
+                     82.39-16.72,168.19-17.73,250.45-.39
+                     C823.78,31,906.67,72,985.66,92.83
+                     c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35z"
+                  fill="#ffffff"></path>
+        </svg>
+    </div>
+</section>
+
+<!-- ================= PARTNERS ================= -->
+<div class="container-fluid bg-white pt-5">
+    <div class="container text-center">
+        <p class="partners-label text-uppercase fw-bold text-muted small mb-4">
+            Trusted by Learners from Leading Platforms
+        </p>
+    </div>
+</div>
+
+<section class="logo-slider-container mb-5 bg-white">
+    <div class="logo-slider-track">
+        <div class="company-logo" style="color:#A435F0;">Udemy</div>
+        <div class="company-logo" style="color:#0056D2;">Coursera</div>
+        <div class="company-logo" style="color:#1F1F1F;">Codecademy</div>
+        <div class="company-logo" style="color:#0077B5;">LinkedIn</div>
+        <div class="company-logo" style="color:#F24E1E;">Figma Edu</div>
+        <div class="company-logo" style="color:#FF0000;">YouTube Edu</div>
+        <div class="company-logo" style="color:#10B981;">Khan Academy</div>
+        <div class="company-logo" style="color:#A435F0;">Udemy</div>
+        <div class="company-logo" style="color:#0056D2;">Coursera</div>
+        <div class="company-logo" style="color:#1F1F1F;">Codecademy</div>
+    </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-6 text-dark">How It Works</h2>
+            <div class="divider mx-auto bg-warning mt-2" style="width:50px;height:3px;"></div>
+        </div>
+
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-5 bg-white rounded-4 shadow-sm h-100 hover-lift border-bottom border-4 border-primary position-relative overflow-hidden">
+                    <div class="step-num-bg">1</div>
+                    <div class="icon-box bg-soft-primary text-primary mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:80px;height:80px;font-size:2rem;">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Teach & Earn</h5>
+                    <p class="text-muted small">
+                        Post a skill you know. When you teach someone, you earn <strong>GyanCoins</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-5 bg-white rounded-4 shadow-sm h-100 hover-lift border-bottom border-4 border-warning position-relative overflow-hidden">
+                    <div class="step-num-bg">2</div>
+                    <div class="icon-box bg-soft-warning text-warning mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:80px;height:80px;font-size:2rem;">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Find & Request</h5>
+                    <p class="text-muted small">
+                        Browse skills. Use your coins to request a live session with an expert.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-5 bg-white rounded-4 shadow-sm h-100 hover-lift border-bottom border-4 border-success position-relative overflow-hidden">
+                    <div class="step-num-bg">3</div>
+                    <div class="icon-box bg-soft-success text-success mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:80px;height:80px;font-size:2rem;">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Learn Live</h5>
+                    <p class="text-muted small">
+                        Connect via Zoom/Meet. Learn 1-on-1 and grow your career naturally.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background-color: #fffbeb;">
+    <div class="container py-5">
+        <div class="text-center mb-5 animate__animated animate__fadeIn">
+            <h2 class="display-5 fw-bold text-dark mb-2">What do you want to learn?</h2>
+            <p class="text-muted fw-bold lead">Browse trending skills by category.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn">
+                <a href="/market?q=Technology" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-primary-subtle text-primary">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Coding</h6>
+                            <small class="text-muted">Python, Web Dev</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.1s;">
+                <a href="/market?q=Other" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-danger-subtle text-danger">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Design</h6>
+                            <small class="text-muted">UI/UX, Graphics</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.2s;">
+                <a href="/market?q=Music" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-warning-subtle text-warning">
+                            <i class="fas fa-guitar"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Music</h6>
+                            <small class="text-muted">Guitar, Vocals</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.3s;">
+                <a href="/market?q=Language" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-success-subtle text-success">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Languages</h6>
+                            <small class="text-muted">English, French</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.4s;">
+                <a href="/market?q=Academic" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-info-subtle text-info">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Academic</h6>
+                            <small class="text-muted">Math, Science</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.5s;">
+                <a href="/market?q=Other" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-secondary-subtle text-secondary">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Photography</h6>
+                            <small class="text-muted">Editing, DSLR</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.6s;">
+                <a href="/market?q=Fitness" class="text-decoration-none">
+                    <div class="category-card p-3 rounded-4 shadow-sm d-flex align-items-center gap-3 bg-white border border-light-subtle">
+                        <div class="icon-box-small bg-dark-subtle text-dark">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0 fw-bold">Fitness</h6>
+                            <small class="text-muted">Yoga, Gym</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-6 animate__animated animate__zoomIn" style="animation-delay: 0.7s;">
+                <a href="/market" class="text-decoration-none">
+                    <div class="category-card explore-card-new p-3 rounded-4 shadow-sm d-flex align-items-center gap-3">
+                        <div class="icon-box-small bg-warning text-dark pulse-yellow shadow-sm">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="text-black">
+                            <h6 class="mb-0 fw-bold">View All</h6>
+                            <small class="text-black-50">Explore 50+ More</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+    <a href="/market" 
+       class="btn btn-dark btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg hover-lift animate__animated animate__pulse animate__infinite">
+        Browse Marketplace <i class="fas fa-arrow-right ms-2"></i>
+    </a>
+    </div>
+</section>
+
+<style>
+    /* 💳 Category Card: Base & Hover Effects */
+    .category-card {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid #f1f5f9 !important;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+        border-color: #10b981 !important; /* GyanBarter Success Green */
+    }
+
+    /* 🎨 Icon Box Styling */
+    .icon-box-small {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    /* 🚀 Updated "View All" Card: White Theme */
+    .explore-card-new {
+        background: #ffffff !important; /* सफ़ेद बैकग्राउंड */
+        border: 1px solid #f1f5f9 !important; /* हल्का बॉर्डर जैसा बाकी कार्ड्स में है */
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .explore-card-new:hover {
+        background: #f8fafc !important; /* होवर करने पर हल्का सा ग्रे टोन */
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+        border-color: #10b981 !important; /* होवर पर ब्रांड ग्रीन बॉर्डर */
+    }
+
+    /* ✍️ Black Text Visibility: सफ़ेद बैकग्राउंड के लिए */
+    .explore-card-new h6 {
+        color: #000000 !important; /* प्योर ब्लैक टेक्स्ट */
+        font-weight: 700 !important;
+        text-shadow: none !important; /* सफ़ेद पर शैडो की ज़रूरत नहीं */
+        letter-spacing: 0.5px;
+    }
+
+    .explore-card-new small {
+        color: #64748b !important; /* सब-टेक्स्ट के लिए डार्क ग्रे रंग */
+        font-weight: 500 !important;
+        opacity: 1 !important;
+    }
+
+    /* ✨ Rocket Icon (रंग को पीला ही रखा है ताकि वह हाईलाइट हो) */
+    .pulse-yellow {
+        animation: pulse-mini 2s infinite;
+    }
+    
+    @keyframes pulse-mini {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+        70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+    }
+
+    /* 🖱️ Interaction: Hover Lift for Buttons */
+    .hover-lift:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+
+    /* 🔥 बटन को लगातार चमकाने वाला मास्टर कोड */
+    .blink-marketplace {
+        animation: marketplace-glow 1.5s infinite ease-in-out; /* 1.5 सेकंड में एक बार चमकेगा */
+        transition: all 0.3s ease;
+    }
+
+    @keyframes marketplace-glow {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); /* हरा ग्लो (आपके ब्रांड कलर जैसा) */
+        }
+        50% {
+            transform: scale(1.05); /* हल्का सा बड़ा होगा */
+            box-shadow: 0 0 20px 10px rgba(16, 185, 129, 0); /* चमक फैलती हुई दिखेगी */
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+</style>
+<!-- ================= STATS ================= -->
+<section class="py-5 bg-white border-top">
+    <div class="container py-4">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="stat-card p-4 rounded-4 bg-light shadow-sm">
+                    <h2 class="display-4 fw-bolder text-warning mb-0">15k+</h2>
+                    <p class="text-muted fw-bold mb-0">Active Learners</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card p-4 rounded-4 bg-light shadow-sm">
+                    <h2 class="display-4 fw-bolder text-warning mb-0">50k+</h2>
+                    <p class="text-muted fw-bold mb-0">Skills Exchanged</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card p-4 rounded-4 bg-light shadow-sm">
+                    <h2 class="display-4 fw-bolder text-warning mb-0">₹0</h2>
+                    <p class="text-muted fw-bold mb-0">Money Spent</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container py-5">
+        <h2 class="text-center fw-bold display-6 text-dark mb-5 animate__animated animate__fadeIn">
+            Stories from the Community
+        </h2>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="testimonial-card p-5 bg-light rounded-4 position-relative shadow-sm border-0 h-100 hover-lift">
+                    <i class="fas fa-quote-left text-warning opacity-25 display-1 position-absolute top-0 start-0 ms-4 mt-2"></i>
+                    <p class="lead fst-italic mb-4 position-relative z-1 text-dark">
+                        "I taught basic Excel to a graphic designer, and in return she built my portfolio. 
+                        No money. Pure value."
+                    </p>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" 
+                             style="width:50px;height:50px;">R</div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Rahul Verma</h6>
+                            <small class="text-muted">Chartered Accountant</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="testimonial-card p-5 bg-light rounded-4 position-relative shadow-sm border-0 h-100 hover-lift">
+                    <i class="fas fa-quote-left text-primary opacity-25 display-1 position-absolute top-0 start-0 ms-4 mt-2"></i>
+                    <p class="lead fst-italic mb-4 position-relative z-1 text-dark">
+                        "I learned guitar by teaching English. GyanBarter made learning affordable and fun."
+                    </p>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" 
+                             style="width:50px;height:50px;">S</div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Sneha Kapoor</h6>
+                            <small class="text-muted">College Student</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{# ✅ NEW: Background changed to Sky Blue to match your clean footer theme #}
+<section class="py-5 text-center" 
+         style="background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%); border-top: 1px solid #e2e8f0;">
+
+    <div class="container py-5 animate__animated animate__fadeIn">
+        <h2 class="display-4 fw-bold text-dark mb-3">
+            Ready to share your knowledge?
+        </h2>
+        <p class="lead mb-5 text-secondary">
+            Join 15,000+ learners today. It's free forever.
+        </p>
+
+        {# ✅ SMART BUTTON LOGIC: User के स्टेटस के हिसाब से बदलेगा #}
+        {% if current_user.is_authenticated %}
+            <a href="/market" 
+               class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-bold text-dark shadow-lg hover-scale animate__animated animate__pulse animate__infinite">
+               Explore Skills Now <i class="fas fa-search ms-2"></i>
+            </a>
+        {% else %}
+            <a href="/sign-up" 
+               class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-bold text-dark shadow-lg hover-scale animate__animated animate__pulse animate__infinite">
+               Get Started Now <i class="fas fa-rocket ms-2"></i>
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    /* ✅ Premium Card & Interaction Effects */
+    .testimonial-card {
+        transition: all 0.3s ease;
+    }
+    .testimonial-card:hover {
+        background-color: #ffffff !important;
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.08) !important;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Sky Blue Section Text Color */
+    .text-secondary {
+        color: #475569 !important;
+    }
+
+    /* बटन पर कर्सर ले जाने पर हल्का सा बड़ा होने का इफेक्ट */
+    .hover-scale {
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .hover-scale:hover {
+        transform: scale(1.08) translateY(-3px);
+    }
+</style>
+<!-- ================= FOOTER ================= -->
+<footer class="footer-natural-green pt-5 pb-4">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+
+            <!-- BRAND -->
+            <div class="col-lg-5">
+                <h4 class="fw-bold mb-3 text-dark">
+                    Gyan<span class="text-success">Barter</span>
+                </h4>
+
+                <p class="footer-desc text-muted mb-3">
+                    Democratizing education through <strong>organic</strong>,
+                    cashless skill exchange. Learn, teach, and grow together.
+                </p>
+
+                <small class="text-muted">
+                    Share Knowledge. Grow Together. ❤️
+                </small>
+            </div>
+
+            <!-- PLATFORM -->
+            <div class="col-lg-3 col-6">
+                <h6 class="footer-title">Platform</h6>
+                <ul class="list-unstyled footer-links">
+                    <li><a href="/market">Browse Skills</a></li>
+                    <li><a href="/login">Sign In</a></li>
+                    <li><a href="/sign-up">Get Started</a></li>
+                </ul>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="col-lg-3 col-6">
+                <h6 class="footer-title">Contact</h6>
+
+                <a href="mailto:gyanbarter@gmail.com"
+                   class="footer-mail d-flex align-items-center gap-2 text-decoration-none">
+                    <span class="footer-icon">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <span>gyanbarter@gmail.com</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+
+<!-- ================= CSS ================= -->
+<style>
+/* SAFETY FIX */
+.hero-cta a { white-space: nowrap; }
+
+/* TYPOGRAPHY */
+.text-brown { color:#451a03!important; }
+.text-highlight-creamy {
+    color:#d97706;
+    text-shadow:2px 2px 15px rgba(251,191,36,.4);
+}
+
+/* GLASS */
+.glass-badge-creamy {
+    background:rgba(255,255,255,.6);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(251,191,36,.3);
+}
+.glass-card-creamy {
+    background:rgba(255,255,255,.4);
+    backdrop-filter:blur(8px);
+    box-shadow:0 8px 32px rgba(0,0,0,.05);
+}
+.backdrop-blur { backdrop-filter: blur(5px); }
+
+/* SHADOWS */
+.shadow-3d { box-shadow:0 10px 20px -5px rgba(0,0,0,.3); }
+.shadow-3d-dark { box-shadow:0 15px 30px -10px rgba(0,0,0,.5); }
+
+/* EFFECTS */
+@keyframes float {
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-8px); }
+}
+.floating-animation { animation: float 4s ease-in-out infinite; }
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow:0 20px 25px -5px rgba(0,0,0,.1);
+    transition:.3s;
+}
+.hover-scale:hover { transform:scale(1.05); transition:.3s; }
+.hover-white:hover { color:#fff!important; }
+
+/* LOGO SLIDER */
+.logo-slider-container {
+    overflow:hidden;
+    padding:25px 0;
+    border-top:1px solid #f3f4f6;
+    border-bottom:1px solid #f3f4f6;
+}
+.logo-slider-track {
+    display:flex;
+    animation:scroll 40s linear infinite;
+}
+.company-logo {
+    padding:0 45px;
+    font-weight:bold;
+    font-size:1.2rem;
+    opacity:.6;
+}
+@keyframes scroll {
+    0% { transform:translateX(0); }
+    100% { transform:translateX(-50%); }
+}
+</style>
+
+{% endblock %}

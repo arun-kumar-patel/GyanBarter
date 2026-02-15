@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Incoming Requests - GyanBarter{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 animate__animated animate__fadeIn">
+        <div>
+            <h3 class="fw-bold m-0 text-dark">
+                <i class="fas fa-inbox me-2 text-danger"></i> Admission Requests
+            </h3>
+            <p class="text-muted small mb-0">Review students who want to join your classes.</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            {% if requests %}
+            <button type="button" class="btn btn-outline-dark btn-sm rounded-pill px-3 shadow-sm hover-scale" id="selectAllBtn">
+                <i class="fas fa-check-double me-1"></i> Select All
+            </button>
+            {% endif %}
+            <a href="/dashboard" class="btn btn-light btn-sm rounded-pill px-3 border shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <form action="{{ url_for('views.bulk_accept_requests') }}" method="POST" id="bulkForm">
+        <div class="row">
+            {% if requests %}
+                {% for req in requests %}
+                <div class="col-md-6 mb-4 animate__animated animate__fadeInUp" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 position-relative h-100 hover-shadow transition-all border-start border-4 border-danger">
+                        
+                        <div class="position-absolute top-0 end-0 m-3 z-1">
+                            <input type="checkbox" name="request_ids" value="{{ req.id }}" class="form-check-input request-checkbox shadow-none" style="width: 1.3em; height: 1.3em; cursor: pointer; border: 2px solid #cbd5e1;">
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ req.sender.profile_pic if 'http' in req.sender.profile_pic else url_for('static', filename='uploads/' + req.sender.profile_pic) }}" 
+                                 class="rounded-circle me-3 border border-2 border-white shadow-sm" 
+                                 style="width: 55px; height: 55px; object-fit: cover;"
+                                 onerror="this.src='{{ req.sender.generate_avatar_url() }}'">
+                            
+                            <div class="lh-1">
+                                <h6 class="fw-bold mb-1 text-dark">{{ req.sender.first_name }} {{ req.sender.last_name or '' }}</h6>
+                                <div class="d-flex flex-wrap gap-1 align-items-center mt-1">
+                                    <small class="text-muted small">Wants:</small> 
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2" style="font-size: 0.65rem;">
+                                        {{ req.skill.title }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-light p-3 rounded-3 mb-3 position-relative border">
+                            <i class="fas fa-quote-left text-secondary opacity-25 position-absolute top-0 start-0 m-2"></i>
+                            <p class="text-muted small mb-0 ps-3" style="font-style: italic;">
+                                {{ req.message if req.message else "I would like to join this class and learn from you!" }}
+                            </p>
+                        </div>
+                        
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                            <small class="text-muted" style="font-size: 0.7rem;">
+                                <i class="far fa-clock me-1"></i>{{ req.timestamp.strftime('%d %b, %I:%M %p') }}
+                            </small>
+                            
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('views.manage_request', req_id=req.id, action='accept') }}" 
+                                   class="btn btn-success btn-sm rounded-pill px-3 shadow-sm fw-bold">
+                                    <i class="fas fa-check me-1"></i> Accept
+                                </a>
+                                
+                                <a href="{{ url_for('views.manage_request', req_id=req.id, action='reject') }}" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold"
+                                   onclick="return confirm('क्या आप इस छात्र को रिजेक्ट करना चाहते हैं? सिक्के छात्र को वापस मिल जाएंगे।')">
+                                    <i class="fas fa-times me-1"></i> Reject
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="opacity-25 mb-3 text-muted"><i class="fas fa-check-circle fa-4x text-success"></i></div>
+                    <h5 class="text-dark fw-bold">You're all caught up!</h5>
+                    <p class="text-muted small">No pending admission requests at the moment.</p>
+                    <a href="{{ url_for('views.dashboard') }}" class="btn btn-primary rounded-pill px-5 mt-2 fw-bold shadow">
+                        Go to Dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="position-fixed bottom-0 start-50 translate-middle-x mb-4 d-none z-3 animate__animated animate__bounceInUp" id="bulkActionContainer">
+            <button type="submit" class="btn btn-dark shadow-lg rounded-pill px-5 py-3 fw-bold border border-warning hover-scale" 
+                    style="background: linear-gradient(45deg, #1e293b, #0f172a);">
+                <i class="fas fa-user-check text-warning me-2"></i> Accept Selected (<span id="count">0</span>)
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const checkboxes = document.querySelectorAll('.request-checkbox');
+    const bulkActionContainer = document.getElementById('bulkActionContainer');
+    const countSpan = document.getElementById('count');
+
+    // ✅ Toggle Select All Logic
+    if(selectAllBtn) {
+        selectAllBtn.addEventListener('click', () => {
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+            
+            // UI Update
+            selectAllBtn.innerHTML = allChecked ? '<i class="fas fa-check-double me-1"></i> Select All' : '<i class="fas fa-times me-1"></i> Deselect All';
+            selectAllBtn.classList.toggle('btn-outline-primary', allChecked);
+            selectAllBtn.classList.toggle('btn-outline-danger', !allChecked);
+            
+            updateBulkVisibility();
+        });
+    }
+
+    // ✅ Listen to Individual Checkbox Changes
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateBulkVisibility);
+    });
+
+    function updateBulkVisibility() {
+        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        
+        if (checkedCount > 0) {
+            bulkActionContainer.classList.remove('d-none');
+            countSpan.innerText = checkedCount;
+        } else {
+            bulkActionContainer.classList.add('d-none');
+        }
+    }
+</script>
+
+<style>
+    .hover-shadow:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.12)!important; 
+    }
+    .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .hover-scale:hover { transform: scale(1.05); }
+    .form-check-input:checked { background-color: #dc3545; border-color: #dc3545; }
+</style>
+{% endblock %}

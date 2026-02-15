@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy - GyanBarter{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --intel-purple: #3a1b5d;
+        --intel-orange: #f39c12;
+        --text-color: #333;
+        --bg-light: #fdfdfd;
+        --border-color: #e0e0e0;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Open Sans', sans-serif;
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    /* 🏷️ Top Slim Banner */
+    .legal-banner {
+        background-color: var(--intel-purple);
+        color: white;
+        padding: 25px 0;
+        margin-bottom: 0;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .legal-banner h1 {
+        font-weight: 700;
+        font-size: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* 📄 Main Layout */
+    .legal-container {
+        display: flex;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        gap: 40px;
+    }
+
+    /* ⬅️ Sidebar Navigation */
+    .legal-sidebar {
+        flex: 1;
+        min-width: 250px;
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: none;
+    }
+    
+    @media (min-width: 992px) {
+        .legal-sidebar { display: block; }
+    }
+
+    .legal-sidebar h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--intel-purple);
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .legal-sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .legal-sidebar li { margin-bottom: 10px; }
+    .legal-sidebar a {
+        text-decoration: none;
+        color: #555;
+        font-size: 13px;
+        transition: color 0.2s;
+        display: block;
+        padding: 5px 0;
+    }
+    .legal-sidebar a:hover { color: var(--intel-orange); padding-left: 5px; font-weight: 600; }
+
+    /* ➡️ Content Area */
+    .legal-content {
+        flex: 3;
+        background: white;
+        padding: 50px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+    }
+
+    .last-updated {
+        font-size: 13px;
+        color: #888;
+        font-style: italic;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--intel-purple);
+        margin-top: 50px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title span {
+        background: var(--intel-orange);
+        color: white;
+        font-size: 14px;
+        padding: 3px 10px;
+        border-radius: 4px;
+        margin-right: 15px;
+    }
+
+    .legal-content h4 {
+        font-size: 18px;
+        color: #222;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .legal-content p {
+        line-height: 1.8;
+        margin-bottom: 15px;
+        font-size: 15px;
+        color: #444;
+        text-align: justify;
+    }
+
+    .legal-content ul { margin-bottom: 20px; padding-left: 20px; }
+    .legal-content li { margin-bottom: 10px; line-height: 1.6; color: #555; }
+
+    .highlight-box {
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 20px;
+        margin: 25px 0;
+        font-size: 14px;
+        color: #0d47a1;
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* Address Box */
+    .address-box {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 6px;
+        border: 1px dashed #ccc;
+        margin-top: 40px;
+    }
+</style>
+
+<div class="legal-banner">
+    <h1>Privacy Policy</h1>
+</div>
+
+<div class="legal-container">
+    <div class="legal-sidebar">
+        <h4>Contents</h4>
+        <ul>
+            <li><a href="#intro">1. Introduction & Scope</a></li>
+            <li><a href="#legal-basis">2. Legal Basis for Processing</a></li>
+            <li><a href="#collection">3. Data We Collect</a></li>
+            <li><a href="#usage">4. How We Use Data</a></li>
+            <li><a href="#cookies">5. Cookies & Tracking</a></li>
+            <li><a href="#sharing">6. Data Sharing</a></li>
+            <li><a href="#security">7. Information Security</a></li>
+            <li><a href="#retention">8. Data Retention</a></li>
+            <li><a href="#rights">9. Your Rights</a></li>
+            <li><a href="#children">10. Children's Privacy</a></li>
+            <li><a href="#jurisdiction">11. Jurisdiction Rules (GDPR/CCPA)</a></li>
+            <li><a href="#updates">12. Updates & Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="legal-content">
+        <div class="last-updated">Last Updated: February 14, 2026</div>
+
+        <p class="highlight-box">
+            <strong>PLEASE READ THE FOLLOWING CAREFULLY:</strong><br>
+            We at <strong>GyanBarter Software Solutions Pvt. Ltd.</strong> ("GyanBarter", "we", "us") respect your privacy and want you to understand how we collect, use, and share data about you. This Privacy Policy covers our data collection practices and describes your rights to access, correct, or restrict our use of your personal data.
+        </p>
+
+        <h2 id="intro" class="section-title"><span>01</span> Introduction</h2>
+        <p>Unless we link to a different policy or state otherwise, this Privacy Policy applies when you visit or use the GyanBarter website, mobile applications, APIs or related services (the "Services").</p>
+        <p>The data controller for all data collected from you with regards to your use of the Services is <strong>GyanBarter Software Solutions Pvt. Ltd.</strong>, a private company registered in India. By using the Services, you agree to the terms of this Privacy Policy. You shouldn’t use the Services if you don’t agree with this Privacy Policy or any other agreement that governs your use of the Services.</p>
+
+        <h2 id="legal-basis" class="section-title"><span>02</span> Legal Basis for Processing Data</h2>
+        <p>We process your data on the basis of the following:</p>
+        <ul>
+            <li><strong>Explicit Consent:</strong> Your explicit consent for processing your data for specific purposes (like creating an account).</li>
+            <li><strong>Contractual Performance:</strong> For the performance of contracts entered into by you for providing any of the Services (e.g., executing a Skill Trade).</li>
+            <li><strong>Legitimate Interests:</strong> Registering and administering accounts on our Services to provide you access to all content, updates, and services you have purchased (via GyanCoins), and to facilitate the efficient running and operation of our business.</li>
+        </ul>
+
+        <h2 id="collection" class="section-title"><span>03</span> What Data We Collect</h2>
+        <p>We collect certain data from you directly, like the information you enter yourself, data about your participation in skill exchanges, and data from third-party platforms you connect with GyanBarter.</p>
+        
+        <h4>A. Data You Provide to Us</h4>
+        <p>When you create an account and use the Services, including through a third-party platform (Google/Facebook), we collect the following data you provide directly:</p>
+        <ul>
+            <li><strong>Account Data:</strong> Name, email address, password, city, skills you want to learn/teach, IP address, and phone number. We assign you a unique identifying number ("Account Data").</li>
+            <li><strong>Profile Content:</strong> Parts of the Services let you interact with other users or share content publicly, including your bio, portfolio, and testimonials. Such shared content may be publicly viewable by others.</li>
+            <li><strong>Transaction Data (GyanCoins):</strong> We track your GyanCoin balance, trades executed, and exchange history. Note: We do not store sensitive financial data like credit card numbers as our platform operates on a barter system.</li>
+        </ul>
+
+        <h4>B. System Data</h4>
+        <p>We automatically collect certain data about your device and how you interact with our Services, including IP address, device type, operating system version, and browser type.</p>
+
+        <h2 id="usage" class="section-title"><span>04</span> How We Use Your Data</h2>
+        <p>We use your data to do things like provide our Services, communicate with you, troubleshoot issues, secure against fraud and abuse, improve and update our Services, and analyze how people use our Services.</p>
+        <ul>
+            <li><strong>Administer Services:</strong> To display customized content and facilitate communication between Instructors and Learners.</li>
+            <li><strong>Process Requests:</strong> To process your requests for skill trades and GyanCoin transfers.</li>
+            <li><strong>Communication:</strong> Sending you administrative messages, notifications about changes to our Service, and updates to our agreements.</li>
+            <li><strong>Security:</strong> Facilitate the Services’ technical functioning, including troubleshooting issues, securing the Services, and preventing fraud and abuse.</li>
+            <li><strong>Improvement:</strong> Analyze trends and traffic, track usage data, and improve our Services.</li>
+        </ul>
+
+        <h2 id="cookies" class="section-title"><span>05</span> Cookies and Data Collection Tools</h2>
+        <p>As detailed in our Cookie Policy, GyanBarter and service providers acting on our behalf use server log files and automated data collection tools like cookies, tags, scripts, and device fingerprints.</p>
+        <h4>Types of Cookies Used:</h4>
+        <ul>
+            <li><strong>Essential Cookies:</strong> Essential for the basic functionalities offered by the Site. These help in keeping a user logged in.</li>
+            <li><strong>Insight Cookies:</strong> Used for tracking user activities to improve user experience.</li>
+            <li><strong>Security Cookies:</strong> Used to identify and prevent security risks.</li>
+        </ul>
+        <p>You can set your web browser to alert you about attempts to place cookies on your computer, limit the types of cookies you allow, or refuse cookies altogether.</p>
+
+        <h2 id="sharing" class="section-title"><span>06</span> Who We Share Your Data With</h2>
+        <p>We share certain data about you with instructors, other students (during a trade), and service providers.</p>
+        <ul>
+            <li><strong>With Other Users:</strong> If you engage in a skill trade, we share basic profile data (Name, Bio, Skills) with the counterparty to facilitate the exchange.</li>
+            <li><strong>With Service Providers:</strong> We share data with third-party companies who perform services on our behalf, like hosting, email delivery, and analytics.</li>
+            <li><strong>Legal Compliance:</strong> We may disclose your data if required by law, subpoena, or to protect the rights, property, or safety of GyanBarter or others.</li>
+            <li><strong>Change in Control:</strong> If GyanBarter undergoes a business transaction like a merger or acquisition, we may transfer your data to the successor organization.</li>
+        </ul>
+
+        <h2 id="security" class="section-title"><span>07</span> Information Security</h2>
+        <p>Our Websites and Service(s) have industry standard security measures in place to protect against the loss, misuse, and alteration of the information under our control. When you provide us with sensitive information (such as login credentials), we encrypt that information via Secure Socket Layer (SSL).</p>
+        <p>We adopt appropriate data collection, storage and processing practices and security measures to protect against unauthorized access, alteration, disclosure or destruction of your personal information, username, password, transaction information and data stored on our Site.</p>
+
+        <h2 id="retention" class="section-title"><span>08</span> Data Retention Period</h2>
+        <p>We will retain your data for longer than necessary, taking into account the purpose and use of your data, legal obligations, and industry practices. We store data as long as your account is active or as needed to provide you Services.</p>
+
+        <h2 id="rights" class="section-title"><span>09</span> Your Rights</h2>
+        <p>You have certain rights around the use of your data, including the ability to opt out of promotional emails, cookies, and collection of your data by certain analytics providers.</p>
+        <ul>
+            <li><strong>Access & Update:</strong> You can access and update your personal data directly within your account settings.</li>
+            <li><strong>Deletion:</strong> You can request to delete your account permanently by emailing <a href="mailto:support@gyanbarter.com">support@gyanbarter.com</a>. Note that some data may be retained for legal record-keeping.</li>
+            <li><strong>Portability:</strong> You have the right to ask for the data to be provided to you in a commonly used machine-readable format.</li>
+            <li><strong>Revocation of Consent:</strong> You may withdraw your consent for processing data at any time by contacting us.</li>
+        </ul>
+
+        <h2 id="children" class="section-title"><span>10</span> Children's Personal Information</h2>
+        <p>GyanBarter does not knowingly collect any personal information from children under the age of 16. If you are under the age of 16, please do not submit any personal information through our Websites or Service(s). We encourage parents and legal guardians to monitor their children’s Internet usage.</p>
+
+        <h2 id="jurisdiction" class="section-title"><span>11</span> Jurisdiction-Specific Rules</h2>
+        <h4>A. Users in California (CCPA)</h4>
+        <p>If you are a California resident, you have the right to request certain details about what personal information we share with third parties for their direct marketing purposes. We do not sell your personal data.</p>
+        
+        <h4>B. Users in European Union (GDPR)</h4>
+        <p>From May 25, 2018, processing of Personal Information of users in the EU is subject to the GDPR. We process data based on consent, contract performance, and legitimate interests. You have the right to lodge a complaint with a supervisory authority.</p>
+        
+        <h4>C. Users Outside of the U.S.</h4>
+        <p>GyanBarter is headquartered in India. By using our Services, you consent to the transfer, storage, and processing of your data in India, where data protection laws may differ from those in your country.</p>
+
+        <h2 id="updates" class="section-title"><span>12</span> Updates & Contact Info</h2>
+        <p>We may update this Privacy Policy from time to time. If we make any material change, we will notify you via email or a notification on the Services.</p>
+        
+        <p>If you have any questions, concerns, or disputes regarding our Privacy Policy, please contact our Grievance Officer:</p>
+        
+        <div class="address-box">
+            <strong>Grievance Officer:</strong> GyanBarter Compliance Team<br>
+            <strong>Company:</strong> GyanBarter Software Solutions Pvt. Ltd.<br>
+            
+            <strong>Address:</strong> Unit 304, Quantum Business Hub,<br>
+            G-Block, Bandra Kurla Complex (BKC),<br>
+            Mumbai, Maharashtra 400051, India.<br><br>
+            
+            <strong>Email:</strong> <a href="mailto:legal@gyanbarter.com" style="color: var(--intel-orange); text-decoration: none;">legal@gyanbarter.com</a><br>
+            <strong>Support:</strong> Available 24/7 via Email
+        </div>
+    </div>
+</div>
+{% endblock %}

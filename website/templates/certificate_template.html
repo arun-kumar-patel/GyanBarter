@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GyanBarter Professional Certificate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Sacramento&family=Playfair+Display:wght@700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        @page { size: A4 landscape; margin: 0; }
+        body, html {
+            margin: 0; padding: 0; width: 297mm; height: 210mm;
+            background-color: #fff; font-family: 'EB Garamond', serif; 
+            overflow: hidden; -webkit-print-color-adjust: exact;
+        }
+
+        .outer-frame {
+            width: 297mm; height: 210mm; background-color: #1e3a8a;
+            padding: 12px; box-sizing: border-box; position: absolute; top: 0; left: 0;
+        }
+
+        .border-frame {
+            border: 3px solid #c5a059; width: 100%; height: 100%;
+            background-color: #fff; padding: 4px; box-sizing: border-box;
+        }
+
+        .inner-content {
+            border: 2px solid #1e3a8a; width: 100%; height: 100%;
+            padding: 20px 45px; box-sizing: border-box; display: flex;
+            flex-direction: column; justify-content: space-between;
+            text-align: center; position: relative;
+            background-image: radial-gradient(#ffffff, #f0f4f8);
+        }
+
+        /* Cert No */
+        .vertical-cert-id {
+            position: absolute;
+            right: 15px; 
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: right center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            color: #444;
+            letter-spacing: 1.2px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        /* --- टॉप बार --- */
+        .top-bar { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+        
+        /* ✅ .left-brand में align-items: center पहले से है, जो दोनों को सेंटर करता है */
+        .left-brand { display: flex; align-items: center; } 
+        
+        .brand-logo-img { width: 55px; height: 55px; object-fit: contain; margin-right: 12px; }
+        
+        /* ✅ UPDATED: ब्रांड टेक्स्ट को थोड़ा ऊपर खिसकाया */
+        .brand-text { 
+            font-family: 'Cinzel', serif; 
+            font-size: 32px; 
+            font-weight: 800; 
+            line-height: 1;
+            margin-top: -4px; /* ✅ यह लाइन जोड़ी है ताकि टेक्स्ट लोगो के बीचोंबीच लगे */
+        }
+        
+        .award-badge {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, #ff9a44, #fc6076, #d32020);
+            border-radius: 50%; border: 2px solid #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; font-family: 'Outfit', sans-serif;
+        }
+
+        .main-title { font-family: 'Cinzel', serif; font-size: 46px; font-weight: 900; color: #111; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .subtitle { 
+            font-family: 'EB Garamond', serif; 
+            font-style: italic; 
+            font-size: 30px; 
+            color: #c5a059; 
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        .recipient-name {
+            font-family: 'Playfair Display', serif; 
+            font-size: 42px; 
+            font-weight: 800; 
+            color: #0ea5e9; 
+            margin: 10px 0; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            display: block; 
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
+        }
+
+        .content-text { font-size: 24px; line-height: 1.4; color: #222; width: 90%; margin: 0 auto; font-weight: 600; }
+        
+        .skill-highlight { 
+            font-weight: 800; 
+            color: #0ea5e9; 
+            font-size: 26px; 
+        }
+
+        .date-section { font-weight: 800; margin-top: 15px; font-size: 21px; color: #1e3a8a; }
+
+        .footer { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 30px; margin-top: 15px; }
+        .signature-block { text-align: center; width: 240px; }
+        .sig-image { font-family: 'Sacramento', cursive; font-size: 56px; color: #000; margin-bottom: -10px; display: block; transform: rotate(-3deg); }
+        .sig-line { border-bottom: 2px solid #333; width: 100%; margin: 5px auto; }
+        .sig-title { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700; color: #555; }
+        
+        .seal-img { width: 100px; height: 100px; object-fit: contain; }
+    </style>
+</head>
+<body>
+
+    <div class="outer-frame">
+        <div class="border-frame">
+            <div class="inner-content">
+                
+                <div class="vertical-cert-id">Cert No: {{ certificate_id }}</div>
+
+                <div class="top-bar">
+                    <div class="left-brand">
+                        {% if logo_base64 %}
+                            <img src="{{ logo_base64 }}" class="brand-logo-img">
+                        {% endif %}
+                        <span class="brand-text">
+                            <span style="color: #000;">Gyan</span><span style="color: #198754;">Barter</span>
+                        </span>
+                    </div>
+                    <div class="award-badge">
+                        <div style="font-size: 8px;">BEST</div>
+                        <div style="font-size: 18px; font-weight: 800;">{{ current_year }}</div>
+                        <div style="font-size: 8px;">AWARD</div>
+                    </div>
+                </div>
+
+                <div class="title-section">
+                    <h1 class="main-title">Certificate of Excellence</h1>
+                    <div class="subtitle">This is to certify that</div>
+                </div>
+
+                <div class="recipient-name">{{ student_name }}</div>
+
+                <div class="content-text">
+                    has successfully demonstrated outstanding proficiency in mastering <br>
+                    the professional concepts of <span class="skill-highlight">"{{ skill_title }}"</span>.<br>
+                    Completed under expert mentorship at the <br>
+                    GyanBarter Peer-to-Peer Learning Network.
+                    
+                    <div class="date-section">Issued on: {{ completion_date }}</div>
+                </div>
+
+                <div class="footer">
+                    <div class="signature-block">
+                        <span class="sig-image">GyanBarter</span>
+                        <div class="sig-line"></div>
+                        <div class="sig-title">Platform Director</div>
+                    </div>
+
+                    <img src="https://m.media-amazon.com/images/I/71M40hgIGlL._AC_.jpg" class="seal-img">
+
+                    <div class="signature-block">
+                        <span class="sig-image">Arun</span>
+                        <div class="sig-line"></div>
+                        <div class="sig-title">CEO, GyanBarter</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Server Error - 500{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Navbar aur Footer ko chhupane ke liye */
+    nav, .navbar, header, footer {
+        display: none !important;
+    }
+    
+    /* Body styling to center content */
+    body { 
+        padding-top: 0 !important; 
+        background-color: #f8f9fa;
+    }
+</style>
+
+<div class="container d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 100vh;">
+    
+    <div class="mb-4 text-danger" style="font-size: 8rem; opacity: 0.2;">
+        <i class="fas fa-tools fa-pulse" style="--fa-animation-duration: 2s;"></i>
+    </div>
+    
+    <h1 class="display-1 fw-bold text-danger" style="letter-spacing: -5px;">500</h1>
+    <h2 class="mb-3 text-dark fw-bold">Internal Server Error</h2>
+    
+    <p class="lead text-muted mb-5" style="max-width: 550px;">
+        Something went wrong on our end. Don't worry, our team of expert monkeys 🐒 has been notified and is fixing it!
+    </p>
+    
+    <div class="d-flex gap-3 flex-wrap justify-content-center">
+        <button onclick="window.location.reload()" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg fw-bold">
+            <i class="fas fa-sync-alt me-2"></i> Refresh Page
+        </button>
+        
+        <a href="mailto:gyanbarter@gmail.com" class="btn btn-outline-dark btn-lg rounded-pill px-5 fw-bold">
+            Contact Support
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

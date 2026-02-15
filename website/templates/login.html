@@ -1,0 +1,269 @@
+{% extends "base.html" %} 
+{% block title %}Login - GyanBarter{% endblock %} 
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    :root {
+        --intel-purple: #3a1b5d;
+        --intel-orange: #f39c12;
+        --intel-bg: #ffffff;
+    }
+
+    body { 
+        background-color: var(--intel-bg); 
+        font-family: 'Open Sans', sans-serif; 
+        color: #333; 
+        margin: 0; 
+        padding: 0; 
+    }
+
+    /* 🏷️ Top Header Bar - स्लिम बैनर */
+    .login-banner {
+        background-color: var(--intel-purple);
+        color: white;
+        padding: 25px 0;
+        margin-bottom: 40px;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .login-banner h1 {
+        font-weight: 700;
+        font-size: 28px; 
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .main-wrapper {
+        max-width: 1150px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px 20px 80px 20px;
+        background: #fff;
+    }
+
+    /* ⬅️ Left Panel: Social Login */
+    .left-side {
+        flex: 1;
+        padding-right: 0px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .left-side h5 { 
+        font-size: 16px; 
+        font-weight: 600; 
+        color: #666; 
+        margin-bottom: 30px; 
+    }
+
+    .btn-social {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        border: 1px solid #dcdcdc;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #444;
+        font-weight: 600;
+        margin-bottom: 20px;
+        transition: 0.2s ease-in-out;
+        font-size: 15px;
+    }
+    .btn-social:hover { 
+        background: #fdfdfd; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+    }
+    
+    .btn-social img { 
+        width: 22px; 
+        height: 22px; 
+        margin-right: 15px; 
+        object-fit: contain; 
+    }
+
+    /* ➖ Center Divider: "OR" वर्टिकल लाइन (Aligned like Sign Up) */
+    .divider-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 50px;
+        position: relative;
+    }
+    .divider-line {
+        width: 1px;
+        background-color: #eeeeee;
+        height: 100%;
+    }
+    .or-text {
+        position: absolute;
+        background-color: white;
+        padding: 10px 0;
+        color: #999;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        top: 85px; /* ✅ बटन्स के बिल्कुल बीच में */
+    }
+
+    /* ➡️ Right Panel: Form */
+    .right-side { 
+        flex: 2; 
+    }
+
+    .form-label { 
+        font-size: 14px; 
+        color: #555; 
+        font-weight: 600; 
+        margin-bottom: 8px; 
+        display: block;
+    }
+
+    /* 🛠️ Input Wrapper for Icons */
+    .input-group-custom {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .input-box {
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        padding: 12px;
+        font-size: 14px;
+        width: 100%;
+        display: block;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .has-icon { padding-right: 45px; }
+
+    .input-box:focus { 
+        border-color: var(--intel-purple); 
+        outline: none; 
+        box-shadow: 0 0 5px rgba(58, 27, 93, 0.1); 
+    }
+
+    .field-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        cursor: pointer;
+        font-size: 16px;
+        z-index: 2;
+    }
+
+    .btn-submit {
+        background-color: var(--intel-orange);
+        color: white;
+        border: none;
+        padding: 14px 70px;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        width: 100%;
+    }
+    .btn-submit:hover { 
+        background-color: #e67e22; 
+        box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4); 
+    }
+
+    .options-text { 
+        font-size: 13px; 
+        color: #777; 
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .options-text a { color: #007bff; text-decoration: none; font-weight: 600; }
+
+    .signup-link {
+        margin-top: 30px;
+        font-size: 14px;
+        color: #666;
+    }
+    .signup-link a { color: var(--intel-orange); font-weight: 700; text-decoration: none; }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .main-wrapper { flex-direction: column; }
+        .divider-container { display: none; } /* मोबाइल पर लाइन छुपा दें */
+        .left-side { border-bottom: 1px solid #eee; padding-bottom: 40px; margin-bottom: 40px; }
+        .right-side { padding-top: 0; }
+        .login-banner h1 { text-align: center; }
+    }
+</style>
+
+<div class="login-banner">
+    <h1>Sign In</h1>
+</div>
+
+<div class="main-wrapper">
+    <div class="left-side">
+        <h5>Sign Up or Log In using</h5>
+        
+        <a href="{{ url_for('auth.facebook_login') }}" class="btn-social" style="color: #1877F2;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook Logo">
+            Facebook
+        </a>
+
+        <a href="{{ url_for('auth.google_login') }}" class="btn-social">
+            <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google Logo">
+            Google
+        </a>
+    </div>
+
+    <div class="divider-container">
+        <div class="divider-line"></div>
+        <span class="or-text">OR</span>
+    </div>
+
+    <div class="right-side">
+        <form method="POST">
+            <label class="form-label">Email Address / Username</label>
+            <div class="input-group-custom">
+                <input type="text" name="email" class="input-box has-icon" required>
+                <i class="fa-solid fa-envelope field-icon"></i>
+            </div>
+
+            <label class="form-label">Password</label>
+            <div class="input-group-custom">
+                <input type="password" id="passwordField" name="password" class="input-box has-icon" required>
+                <i class="fa-solid fa-eye field-icon" id="togglePassword"></i>
+            </div>
+
+            <button type="submit" class="btn-submit">Log In</button>
+
+            <div class="options-text">
+                <label style="cursor: pointer;"><input type="checkbox" name="remember" style="margin-right: 5px;"> Remember Me</label>
+                <a href="{{ url_for('auth.forgot_password') }}">Lost your password?</a>
+            </div>
+        </form>
+        
+        <div class="signup-link">
+            Don't have an account? <a href="{{ url_for('auth.sign_up') }}">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ✅ Password Show/Hide Logic
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#passwordField');
+
+    togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+{% endblock %}

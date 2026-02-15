@@ -1,0 +1,322 @@
+{% extends "base.html" %} 
+{% block title %}Sign Up - GyanBarter{% endblock %} 
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    :root {
+        --intel-purple: #3a1b5d;
+        --intel-orange: #f39c12;
+        --intel-bg: #ffffff;
+    }
+
+    body { 
+        background-color: var(--intel-bg); 
+        font-family: 'Open Sans', sans-serif; 
+        color: #333; 
+        margin: 0; 
+        padding: 0; 
+    }
+
+    /* 🏷️ Top Header Bar - स्लिम बैनर */
+    .signup-banner {
+        background-color: var(--intel-purple);
+        color: white;
+        padding: 25px 0;
+        margin-bottom: 40px;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .signup-banner h1 {
+        font-weight: 700;
+        font-size: 28px; 
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .main-wrapper {
+        max-width: 1150px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px 20px 80px 20px;
+        background: #fff;
+    }
+
+    /* ⬅️ Left Panel: Social Login */
+    .left-side {
+        flex: 1;
+        padding-right: 0px;
+        display: flex;
+        flex-direction: column;
+    }
+    .left-side h5 { 
+        font-size: 16px; 
+        font-weight: 600; 
+        color: #666; 
+        margin-bottom: 30px; 
+    }
+
+    .btn-social {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        border: 1px solid #dcdcdc;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #444;
+        font-weight: 600;
+        margin-bottom: 20px;
+        transition: 0.2s ease-in-out;
+        font-size: 15px;
+    }
+    .btn-social:hover { 
+        background: #fdfdfd; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+    }
+    
+    .btn-social img { 
+        width: 22px; 
+        height: 22px; 
+        margin-right: 15px; 
+        object-fit: contain; 
+    }
+
+    /* ➖ Center Divider: "OR" वर्टिकल लाइन (Aligned between Social Buttons) */
+    .divider-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 50px;
+        position: relative;
+    }
+    .divider-line {
+        width: 1px;
+        background-color: #eeeeee;
+        height: 100%;
+    }
+    .or-text {
+        position: absolute;
+        background-color: white;
+        padding: 10px 0;
+        color: #999;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        top: 85px; /* ✅ फेसबुक और गूगल बटन के बिल्कुल बीच में */
+    }
+
+    /* ➡️ Right Panel: Form */
+    .right-side { 
+        flex: 2; 
+    }
+
+    .form-label { 
+        font-size: 14px; 
+        color: #555; 
+        font-weight: 600; 
+        margin-bottom: 8px; 
+        display: block;
+    }
+    .star { color: #e74c3c; font-weight: bold; }
+
+    /* 🛠️ Input Wrapper for Icons */
+    .input-group-custom {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .input-box {
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        padding: 12px;
+        font-size: 14px;
+        width: 100%;
+        display: block;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .has-icon { padding-right: 45px; }
+
+    .input-box:focus { 
+        border-color: var(--intel-purple); 
+        outline: none; 
+        box-shadow: 0 0 5px rgba(58, 27, 93, 0.1); 
+    }
+
+    .field-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        cursor: pointer;
+        font-size: 16px;
+        z-index: 2;
+    }
+
+    .btn-submit {
+        background-color: var(--intel-orange);
+        color: white;
+        border: none;
+        padding: 14px 70px;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        width: 100%;
+    }
+    .btn-submit:hover { 
+        background-color: #e67e22; 
+        box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4); 
+    }
+
+    .terms-text { 
+        font-size: 13px; 
+        color: #777; 
+        margin-bottom: 25px; 
+        display: flex;
+        align-items: flex-start;
+    }
+    .terms-text input { margin-top: 3px; margin-right: 10px; }
+    .terms-text a { color: #007bff; text-decoration: none; font-weight: 600; }
+
+    @media (max-width: 992px) {
+        .main-wrapper { flex-direction: column; }
+        .divider-container { display: none; } /* मोबाइल पर लाइन छुपा दें */
+        .left-side { border-bottom: 1px solid #eee; padding-bottom: 40px; margin-bottom: 40px; }
+        .right-side { padding-top: 0; }
+        .signup-banner h1 { text-align: center; }
+    }
+</style>
+
+<div class="signup-banner">
+    <h1>Sign Up</h1>
+</div>
+
+<div class="main-wrapper">
+    <div class="left-side">
+        <h5>Sign Up or Log In using</h5>
+        
+        <a href="{{ url_for('auth.facebook_login') }}" class="btn-social" style="color: #1877F2;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook Logo">
+            Facebook
+        </a>
+
+        <a href="{{ url_for('auth.google_login') }}" class="btn-social">
+            <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google Logo">
+            Google
+        </a>
+
+        <div class="mt-4 d-none d-lg-block">
+            <p class="text-muted small">"Give a skill, get a skill. Join the barter revolution! 🤝"</p>
+        </div>
+    </div>
+
+    <div class="divider-container">
+        <div class="divider-line"></div>
+        <span class="or-text">OR</span>
+    </div>
+
+    <div class="right-side">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="firstName" class="input-box" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" name="lastName" class="input-box">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Email address <span class="star">*</span></label>
+                    <div class="input-group-custom">
+                        <input type="email" name="email" class="input-box has-icon" required>
+                        <i class="fa-solid fa-envelope field-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Password <span class="star">*</span></label>
+                    <div class="input-group-custom">
+                        <input type="password" id="passwordField" name="password" class="input-box has-icon" required>
+                        <i class="fa-solid fa-eye field-icon" id="togglePassword"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Country</label>
+                    <select name="country" id="country-select" class="input-box" style="background-color: white; cursor: pointer;">
+                        <option value="" selected disabled>Select a country...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" name="phone" class="input-box">
+                </div>
+            </div>
+
+            <div class="terms-text">
+                <input type="checkbox" id="terms" required checked>
+                <label for="terms" style="margin-left: 10px;">
+                    By providing your contact details, you agree to our 
+                    <a href="{{ url_for('views.terms') }}" target="_blank">Terms of Use</a> & 
+                    <a href="{{ url_for('views.privacy') }}" target="_blank">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">Register</button>
+        </form>
+        
+        <div class="mt-4">
+            <p class="small text-muted">Already have an account? <a href="{{ url_for('auth.login') }}" style="color: var(--intel-orange); font-weight: 700; text-decoration: none;">Login here</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ✅ Password Show/Hide Logic
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#passwordField');
+
+    togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // ✅ Country List
+    const countries = [
+        {name: "Afghanistan", code: "+93"}, {name: "Albania", code: "+355"}, {name: "Algeria", code: "+213"}, {name: "Argentina", code: "+54"}, {name: "Australia", code: "+61"},
+        {name: "Austria", code: "+43"}, {name: "Bahrain", code: "+973"}, {name: "Bangladesh", code: "+880"}, {name: "Belgium", code: "+32"}, {name: "Brazil", code: "+55"},
+        {name: "Canada", code: "+1"}, {name: "China", code: "+86"}, {name: "Colombia", code: "+57"}, {name: "Denmark", code: "+45"}, {name: "Egypt", code: "+20"},
+        {name: "Finland", code: "+358"}, {name: "France", code: "+33"}, {name: "Germany", code: "+49"}, {name: "Greece", code: "+30"}, {name: "Hong Kong", code: "+852"},
+        {name: "Hungary", code: "+36"}, {name: "India", code: "+91"}, {name: "Indonesia", code: "+62"}, {name: "Ireland", code: "+353"}, {name: "Israel", code: "+972"},
+        {name: "Italy", code: "+39"}, {name: "Japan", code: "+81"}, {name: "Kuwait", code: "+965"}, {name: "Malaysia", code: "+60"}, {name: "Mexico", code: "+52"},
+        {name: "Netherlands", code: "+31"}, {name: "New Zealand", code: "+64"}, {name: "Nigeria", code: "+234"}, {name: "Norway", code: "+47"}, {name: "Pakistan", code: "+92"},
+        {name: "Philippines", code: "+63"}, {name: "Poland", code: "+48"}, {name: "Portugal", code: "+351"}, {name: "Qatar", code: "+974"}, {name: "Russia", code: "+7"},
+        {name: "Saudi Arabia", code: "+966"}, {name: "Singapore", code: "+65"}, {name: "South Africa", code: "+27"}, {name: "South Korea", code: "+82"}, {name: "Spain", code: "+34"},
+        {name: "Sri Lanka", code: "+94"}, {name: "Sweden", code: "+46"}, {name: "Switzerland", code: "+41"}, {name: "Thailand", code: "+66"}, {name: "Turkey", code: "+90"},
+        {name: "UAE", code: "+971"}, {name: "UK", code: "+44"}, {name: "USA", code: "+1"}, {name: "Vietnam", code: "+84"}
+    ];
+
+    const select = document.getElementById('country-select');
+    countries.forEach(c => {
+        let opt = document.createElement('option');
+        opt.value = `${c.name} (${c.code})`;
+        opt.innerHTML = `${c.name} (${c.code})`;
+        if(c.name === "India") opt.selected = true; // भारत को डिफ़ॉल्ट रखें
+        select.appendChild(opt);
+    });
+</script>
+{% endblock %}

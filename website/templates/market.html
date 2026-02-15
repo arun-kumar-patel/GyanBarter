@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block title %}Skills Market - GyanBarter{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<section class="bg-white border-bottom pt-5 pb-4">
+    <div class="container">
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-dark m-0 display-6">📚 Skills Market</h2>
+                <p class="text-muted m-0">Find the perfect live session to join today.</p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('views.market') }}" method="GET">
+            <div class="card border-0 shadow-sm bg-light rounded-4">
+                <div class="card-body p-4">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-4 col-md-6">
+                            <label class="form-label fw-bold text-muted small">SEARCH</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" name="q" class="form-control border-start-0 shadow-none" placeholder="Python, Guitar, Yoga..." value="{{ request.args.get('q', '') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label fw-bold text-muted small">CATEGORY</label>
+                            <select name="category" class="form-select shadow-none">
+                                <option value="All" {% if request.args.get('category') == 'All' %}selected{% endif %}>All Categories</option>
+                                <option value="Technology" {% if request.args.get('category') == 'Technology' %}selected{% endif %}>Technology</option>
+                                <option value="Music" {% if request.args.get('category') == 'Music' %}selected{% endif %}>Music</option>
+                                <option value="Academic" {% if request.args.get('category') == 'Academic' %}selected{% endif %}>Academic</option>
+                                <option value="Fitness" {% if request.args.get('category') == 'Fitness' %}selected{% endif %}>Fitness</option>
+                                <option value="Language" {% if request.args.get('category') == 'Language' %}selected{% endif %}>Language</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label fw-bold text-muted small">SORT BY</label>
+                            <select name="sort_by" class="form-select shadow-none">
+                                <option value="newest" {% if request.args.get('sort_by') == 'newest' %}selected{% endif %}>Newest First</option>
+                                <option value="price_low" {% if request.args.get('sort_by') == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price_high" {% if request.args.get('sort_by') == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-6 d-grid">
+                            <button type="submit" class="btn btn-primary fw-bold rounded-3 py-2">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="py-5" style="background-color: #f8f9fa; min-height: 80vh;">
+    <div class="container">
+        {% if skills %}
+            <div class="row g-4">
+                {% for skill in skills %}
+                <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
+                    <div class="card h-100 border-0 shadow-sm hover-card rounded-4 overflow-hidden position-relative bg-white">
+                        
+                        {% set bg_color = 'bg-primary' %}
+                        {% if skill.category == 'Music' %}{% set bg_color = 'bg-warning text-dark' %}
+                        {% elif skill.category == 'Fitness' %}{% set bg_color = 'bg-success text-white' %}
+                        {% elif skill.category == 'Technology' %}{% set bg_color = 'bg-dark text-white' %}
+                        {% elif skill.category == 'Academic' %}{% set bg_color = 'bg-secondary text-white' %}
+                        {% endif %}
+
+                        <div class="card-header {{ bg_color }} d-flex justify-content-between align-items-center py-3 border-0">
+                            <span class="badge bg-white text-dark fw-bold rounded-pill px-3">{{ skill.category if skill.category else "General" }}</span>
+                            <small class="fw-bold opacity-75">Posted: {{ skill.date_posted.strftime('%d %b') }}</small>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-3">{{ skill.title }}</h5>
+                            
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-light text-primary border border-primary border-opacity-25 px-2 py-2 small">
+                                    <i class="far fa-clock me-1"></i> {{ skill.duration }}
+                                </span>
+                                <span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-2 small">
+                                    <i class="fas fa-signal me-1 text-primary"></i> 
+                                    {{ skill.difficulty_level.split(' ')[0] if skill.difficulty_level else 'Beginner' }}
+                                </span>
+                            </div>
+
+                            <p class="text-muted small flex-grow-1 mb-3">
+                                {{ skill.description[:110] }}...
+                            </p>
+
+                            <div class="p-2 px-3 mb-3 rounded-3 d-flex align-items-center" 
+                                 style="font-size: 0.8rem; {% if skill.expiry_date and skill.expiry_date.year > 2030 %}background-color: #f0fdf4; border: 1px solid #dcfce7;{% else %}background-color: #fffbeb; border: 1px solid #fef3c7;{% endif %}">
+                                
+                                {% if skill.expiry_date and skill.expiry_date.year > 2030 %}
+                                    <i class="fas fa-infinity me-2 text-success"></i>
+                                    <span class="text-success fw-bold">Permanent Class</span>
+                                {% elif skill.expiry_date %}
+                                    <i class="fas fa-hourglass-half me-2 animate-pulse text-warning"></i>
+                                    <span class="text-warning-emphasis fw-bold">
+                                        Enroll before: {{ skill.expiry_date.strftime('%d %b, %I:%M %p') }}
+                                    </span>
+                                {% else %}
+                                    <i class="fas fa-infinity me-2 text-success"></i>
+                                    <span class="text-success fw-bold">Permanent Class</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ url_for('views.public_profile', username=skill.author.username) }}">
+                                        <img src="{{ url_for('static', filename='uploads/' + skill.author.profile_pic) }}" 
+                                             class="rounded-circle me-2 border shadow-sm" 
+                                             style="width: 40px; height: 40px; object-fit: cover;"
+                                             onerror="this.src='{{ skill.author.generate_avatar_url() }}'">
+                                    </a>
+                                    <div>
+                                        <a href="{{ url_for('views.public_profile', username=skill.author.username) }}" 
+                                           class="fw-bold text-dark text-decoration-none small d-block mb-0" 
+                                           style="line-height: 1.1;">
+                                            @{{ skill.author.username }}
+                                        </a>
+                                        <div class="text-warning fw-bold" style="font-size: 0.7rem;">
+                                            <i class="fas fa-star"></i> {{ skill.author.get_avg_rating() }} 
+                                            <span class="text-muted fw-normal">({{ skill.author.get_review_count() }} Reviews)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <h5 class="mb-0 fw-bold text-dark">🪙 {{ skill.cost }}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-white border-0 p-3 pt-0">
+                            {% if skill.author == current_user %}
+                                <a href="{{ url_for('views.classroom', skill_id=skill.id) }}" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm">
+                                    <i class="fas fa-chalkboard-teacher me-1"></i> Open Classroom
+                                </a>
+                            {% else %}
+                                {% set existing_req = skill.requests | selectattr("sender_id", "equalto", current_user.id) | first %}
+                                
+                                {% if existing_req %}
+                                    {% if existing_req.status == 'Pending' %}
+                                        <button class="btn btn-warning w-100 rounded-pill fw-bold" disabled>
+                                            <i class="fas fa-clock me-1"></i> Request Sent
+                                        </button>
+                                    {% elif existing_req.status == 'Accepted' %}
+                                        <a href="{{ url_for('views.classroom', skill_id=skill.id) }}" class="btn btn-primary w-100 rounded-pill fw-bold">
+                                            <i class="fas fa-door-open me-1"></i> Enter Classroom
+                                        </a>
+                                    {% else %}
+                                        <button onclick="confirmJoin('{{ skill.id }}', '{{ skill.title }}')" class="btn btn-dark w-100 rounded-pill fw-bold">
+                                            Re-request <i class="fas fa-redo ms-1"></i>
+                                        </button>
+                                    {% endif %}
+                                {% else %}
+                                    <button onclick="confirmJoin('{{ skill.id }}', '{{ skill.title }}')" class="btn btn-dark w-100 rounded-pill fw-bold shadow-sm hover-grow">
+                                        Join Class <i class="fas fa-arrow-right ms-1"></i>
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-search text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                <h3 class="fw-bold text-dark">No Classes Available</h3>
+                <p class="text-muted">Adjust your filters or be the first to teach a skill!</p>
+                <a href="{{ url_for('views.add_skill') }}" class="btn btn-success mt-2 rounded-pill px-4">Post a Skill Now</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<a href="{{ url_for('views.add_skill') }}" 
+   class="btn btn-success shadow-lg rounded-circle d-flex align-items-center justify-content-center hover-scale"
+   style="position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; z-index: 1000; font-size: 24px;"
+   title="Post a New Skill">
+    <i class="fas fa-plus text-white"></i>
+</a>
+
+<script>
+    /* ✅ CONFIRM JOIN POPUP LOGIC */
+    function confirmJoin(skillId, title) {
+        Swal.fire({
+            title: 'Enroll in Class?',
+            text: `Do you want to join "${title}"?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#166534',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Send Request!',
+            borderRadius: '15px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirecting to backend route
+                window.location.href = `/request-trade/${skillId}`;
+            }
+        });
+    }
+
+    /* ✅ SUCCESS POPUP AFTER REDIRECT */
+    document.addEventListener('DOMContentLoaded', function() {
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if "Escrow Hold" in message or "Success" in message %}
+                        Swal.fire({
+                            title: 'Request Sent! 📩',
+                            text: 'Apana request abhi pending main hai, please teacher accept ke liye wait kare.',
+                            icon: 'success',
+                            confirmButtonColor: '#166534'
+                        });
+                    {% elif category == 'error' %}
+                        Swal.fire({
+                            title: 'Oops!',
+                            text: '{{ message }}',
+                            icon: 'error',
+                            confirmButtonColor: '#d33'
+                        });
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    });
+</script>
+
+<style>
+    .hover-card { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .hover-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important; }
+    .hover-grow { transition: transform 0.2s; }
+    .hover-grow:hover { transform: scale(1.02); }
+    .hover-scale { transition: transform 0.2s; }
+    .hover-scale:hover { transform: scale(1.1); }
+    .animate-pulse { animation: pulse-yellow 2s infinite; }
+    @keyframes pulse-yellow { 
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+
+{% endblock %}

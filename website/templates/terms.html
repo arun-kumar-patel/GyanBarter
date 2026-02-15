@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% block title %}Terms of Use - GyanBarter{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --intel-purple: #3a1b5d;
+        --intel-orange: #f39c12;
+        --text-color: #333;
+        --bg-light: #fdfdfd;
+        --border-color: #e0e0e0;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Open Sans', sans-serif;
+        color: var(--text-color);
+    }
+
+    /* 🏷️ Top Slim Banner (Consistent with Signup Page) */
+    .legal-banner {
+        background-color: var(--intel-purple);
+        color: white;
+        padding: 25px 0;
+        margin-bottom: 0; /* Remove bottom margin to connect with layout */
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .legal-banner h1 {
+        font-weight: 700;
+        font-size: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* 📄 Main Layout: Sidebar + Content */
+    .legal-container {
+        display: flex;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        gap: 40px;
+    }
+
+    /* ⬅️ Left Sidebar (Table of Contents) */
+    .legal-sidebar {
+        flex: 1;
+        min-width: 250px;
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: none; /* Mobile pe hide rahega, Desktop pe dikhega */
+    }
+    
+    @media (min-width: 992px) {
+        .legal-sidebar { display: block; }
+    }
+
+    .legal-sidebar h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--intel-purple);
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .legal-sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .legal-sidebar li {
+        margin-bottom: 10px;
+    }
+
+    .legal-sidebar a {
+        text-decoration: none;
+        color: #555;
+        font-size: 14px;
+        transition: color 0.2s;
+        display: block;
+        padding: 5px 0;
+    }
+
+    .legal-sidebar a:hover {
+        color: var(--intel-orange);
+        padding-left: 5px; /* Slight movement effect */
+    }
+
+    /* ➡️ Right Content Area */
+    .legal-content {
+        flex: 3;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .last-updated {
+        font-size: 13px;
+        color: #888;
+        font-style: italic;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--intel-purple);
+        margin-top: 40px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title span {
+        background: var(--intel-orange);
+        color: white;
+        font-size: 14px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+
+    .legal-content p {
+        line-height: 1.8;
+        margin-bottom: 15px;
+        font-size: 15px;
+        color: #444;
+        text-align: justify;
+    }
+
+    .legal-content ul {
+        margin-bottom: 20px;
+        padding-left: 20px;
+    }
+
+    .legal-content li {
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .highlight-box {
+        background-color: #fff8e1;
+        border-left: 4px solid var(--intel-orange);
+        padding: 15px;
+        margin: 20px 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    /* Contact Address Box */
+    .address-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 6px;
+        border: 1px dashed #ccc;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="legal-banner">
+    <h1>Terms and Conditions</h1>
+</div>
+
+<div class="legal-container">
+    <div class="legal-sidebar">
+        <h4>Table of Contents</h4>
+        <ul>
+            <li><a href="#intro">1. Introduction</a></li>
+            <li><a href="#definitions">2. Definitions</a></li>
+            <li><a href="#gyancoins">3. The GyanCoin System</a></li>
+            <li><a href="#conduct">4. User Conduct</a></li>
+            <li><a href="#intellectual">5. Intellectual Property</a></li>
+            <li><a href="#liability">6. Limitation of Liability</a></li>
+            <li><a href="#termination">7. Termination</a></li>
+            <li><a href="#disputes">8. Dispute Resolution</a></li>
+            <li><a href="#contact">9. Contact Information</a></li>
+        </ul>
+    </div>
+
+    <div class="legal-content">
+        <div class="last-updated">Last Revised: February 14, 2026</div>
+
+        <p class="highlight-box">
+            <strong>IMPORTANT NOTICE:</strong> THESE TERMS AND CONDITIONS CONTAIN A BINDING ARBITRATION PROVISION AND WAIVER OF JURY TRIALS AND CLASS ACTIONS THAT GOVERN DISPUTES BETWEEN YOU AND GYANBARTER. PLEASE READ THESE TERMS CAREFULLY BEFORE USING THE GYANBARTER SERVICE.
+        </p>
+
+        <h2 id="intro" class="section-title"><span>01</span> Introduction & Acceptance</h2>
+        <p>Welcome to <strong>GyanBarter</strong> ("Company", "we", "our", "us"). These Terms and Conditions ("Terms", "Agreement") govern your access to and use of our website located at <em>www.gyanbarter.com</em> (the "Service").</p>
+        <p>By accessing or using the Service, you confirm that you have read, understood, and agree to be bound by these Terms. If you do not agree with any part of these Terms, you must discontinue use of our Service immediately. This Agreement applies to all visitors, users, and others who access the Service ("Users").</p>
+
+        <h2 id="definitions" class="section-title"><span>02</span> Definitions</h2>
+        <p>To ensure clarity, certain terms in this agreement are defined as follows:</p>
+        <ul>
+            <li><strong>"Service"</strong> refers to the GyanBarter website, its servers, and the underlying peer-to-peer connection infrastructure.</li>
+            <li><strong>"GyanCoins"</strong> refers to the virtual, non-monetary credits used exclusively on the Service to facilitate skill exchanges.</li>
+            <li><strong>"Instructor"</strong> refers to a User who offers a skill or lesson to another User.</li>
+            <li><strong>"Learner"</strong> refers to a User who requests a skill or lesson from another User.</li>
+            <li><strong>"Trade"</strong> refers to the confirmed exchange of knowledge between an Instructor and a Learner using GyanCoins.</li>
+        </ul>
+
+        <h2 id="gyancoins" class="section-title"><span>03</span> The GyanCoin Ecosystem</h2>
+        <p>GyanBarter operates on a unique "knowledge economy" model. You acknowledge and agree to the following regarding GyanCoins:</p>
+        <ul>
+            <li><strong>No Monetary Value:</strong> GyanCoins are strictly virtual tokens. They have <strong>zero (0) cash value</strong>. They cannot be redeemed for fiat currency (INR, USD, etc.) or cryptocurrency.</li>
+            <li><strong>Non-Transferable:</strong> You may not sell, trade, or transfer GyanCoins to another account outside of the platform's official trade mechanism. Selling accounts or coins on third-party sites (e.g., eBay, forums) is strictly prohibited and will result in an immediate ban.</li>
+            <li><strong>Promotional Balance:</strong> The "50 Coin Signup Bonus" is a promotional offer intended to jumpstart new users. GyanBarter reserves the right to revoke these coins if we detect fraudulent activity or "farming" of accounts.</li>
+            <li><strong>Inflation & Adjustments:</strong> We reserve the right to adjust the "cost" of skills or the value of GyanCoins at any time to maintain a balanced economy within the platform.</li>
+        </ul>
+
+        <h2 id="conduct" class="section-title"><span>04</span> User Conduct & Prohibited Acts</h2>
+        <p>You agree not to use the Service for any purpose that is unlawful or prohibited by these Terms. You specifically agree NOT to:</p>
+        <ul>
+            <li><strong>Harassment:</strong> Use the platform to stalk, harass, threaten, or intimidate other users. GyanBarter has a zero-tolerance policy for hate speech.</li>
+            <li><strong>Fake Skills:</strong> Misrepresent your qualifications. Claiming to be an expert (e.g., a Doctor or Lawyer) without valid credentials to give professional advice is prohibited.</li>
+            <li><strong>System Abuse:</strong> Use automated scripts, bots, or spiders to access the Service, scrape data, or generate fake accounts to earn GyanCoins.</li>
+            <li><strong>Off-Platform Poaching:</strong> Use GyanBarter solely to advertise competing services or attempt to move transactions off the platform to avoid the coin system.</li>
+        </ul>
+
+        <h2 id="intellectual" class="section-title"><span>05</span> Intellectual Property Rights</h2>
+        <p>The Service and its original content (excluding Content provided by users), features, and functionality are and will remain the exclusive property of GyanBarter Software Solutions Pvt. Ltd. and its licensors.</p>
+        <p><strong>User Content License:</strong> By teaching a skill or posting content, you grant GyanBarter a worldwide, non-exclusive, royalty-free license to use, reproduce, and display such content in connection with the Service.</p>
+
+        <h2 id="liability" class="section-title"><span>06</span> Limitation of Liability & Disclaimers</h2>
+        <p class="highlight-box">
+            GyanBarter acts solely as an intermediary (connector) between Learners and Instructors. We do not employ Instructors and are not responsible for their conduct.
+        </p>
+        <p>To the maximum extent permitted by applicable law, in no event shall GyanBarter, its affiliates, agents, directors, employees, suppliers, or licensors be liable for:</p>
+        <ul>
+            <li>Any indirect, punitive, incidental, special, consequential, or exemplary damages.</li>
+            <li>Any damage, loss, or injury resulting from hacking, tampering, or other unauthorized access or use of the Service or your account.</li>
+            <li>Any errors, mistakes, or inaccuracies of content taught by other users.</li>
+            <li>Personal injury or property damage, of any nature whatsoever, resulting from your access to and use of our Service.</li>
+        </ul>
+
+        <h2 id="termination" class="section-title"><span>07</span> Termination</h2>
+        <p>We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.</p>
+        <p>If you wish to terminate your account, you may simply discontinue using the Service. Upon termination, your right to use the Service will immediately cease, and any accumulated GyanCoins will be forfeited.</p>
+
+        <h2 id="disputes" class="section-title"><span>08</span> Dispute Resolution & Governing Law</h2>
+        <p>If you have any concern or dispute about the Service, you agree to first try to resolve the dispute informally by contacting GyanBarter.</p>
+        <p>These Terms shall be governed and construed in accordance with the laws of <strong>India</strong>, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. The courts located in <strong>Bengaluru, Karnataka</strong> shall have exclusive jurisdiction.</p>
+
+        <h2 id="contact" class="section-title"><span>09</span> Contact Us</h2>
+        <p>If you have any questions about these Terms, please contact our Grievance Officer:</p>
+        
+        <div class="address-box">
+    <strong>Grievance Officer:</strong> GyanBarter Compliance Team<br>
+    <strong>Company:</strong> GyanBarter Software Solutions Pvt. Ltd.<br>
+    
+    <strong>Address:</strong> Unit 304, Quantum Business Hub,<br>
+    G-Block, Bandra Kurla Complex (BKC),<br>
+    Mumbai, Maharashtra 400051, India.<br><br>
+    
+    <strong>Email:</strong> <a href="mailto:legal@gyanbarter.com" style="color: var(--intel-orange); text-decoration: none;">legal@gyanbarter.com</a><br>
+    <strong>Support:</strong> Available 24/7 via Email
+</div>
+    </div>
+</div>
+{% endblock %}

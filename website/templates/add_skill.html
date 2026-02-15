@@ -1,0 +1,169 @@
+{% extends "base.html" %} 
+{% block title %}Post a New Skill - GyanBarter{% endblock %} 
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <div class="card-header text-white text-center py-4 rounded-top-4" 
+                     style="background: linear-gradient(45deg, #166534, #14532d);">
+                    <h3 class="fw-bold mb-1">🚀 Create a Classroom</h3>
+                    <p class="mb-0 text-white-50">Set your schedule, define duration, and earn coins!</p>
+                </div>
+
+                <div class="card-body p-5">
+                    
+                    <div class="alert alert-light border-start border-4 border-success shadow-sm mb-4" role="alert">
+                        <i class="fa fa-info-circle text-success me-2"></i> 
+                        <strong>Smart Planning:</strong> Choosing a clear <strong>Start Time</strong> helps students join on time.
+                    </div>
+
+                    <form method="POST">
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-7">
+                                <label for="title" class="form-label fw-bold text-dark">Skill / Topic Title</label>
+                                <input type="text" class="form-control form-control-lg border-2 shadow-none" id="title" name="title" 
+                                       placeholder="e.g. Advanced Python, Guitar Basics" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="skill_type" class="form-label fw-bold text-dark">Category</label>
+                                <select class="form-select form-select-lg border-2" id="skill_type" name="skill_type" required>
+                                    <option value="" disabled selected>Select...</option>
+                                    <option value="Technology">💻 Technology</option>
+                                    <option value="Music">🎵 Music & Arts</option>
+                                    <option value="Academic">📚 Academic</option>
+                                    <option value="Fitness">💪 Fitness</option>
+                                    <option value="Language">🗣️ Languages</option>
+                                    <option value="Other">✨ Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Class Duration</label>
+                                <div class="input-group input-group-lg">
+                                    <div style="flex: 1;">
+                                        <input type="number" class="form-control border-2 h-100" name="duration_value" id="duration_value" placeholder="e.g. 5" min="1" required>
+                                    </div>
+                                    <select class="form-select border-2 bg-light fw-bold" name="duration_unit" id="duration_unit" style="max-width: 140px;">
+                                        <option value="Minutes">Minutes</option>
+                                        <option value="Hours" selected>Hours</option>
+                                        <option value="Days">Days</option>
+                                    </select>
+                                </div>
+                                <small class="text-muted">Total learning time for the student.</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="difficulty_level" class="form-label fw-bold text-dark">Difficulty Level</label>
+                                <select class="form-select form-select-lg border-2" id="difficulty_level" name="difficulty_level">
+                                    <option value="Beginner (Level 1)">Beginner (Level 1)</option>
+                                    <option value="Intermediate (Level 2)">Intermediate (Level 2)</option>
+                                    <option value="Expert (Level 3)">Expert (Level 3)</option>
+                                </select>
+                                <small class="text-muted">Help students know if this class is for them.</small>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 opacity-25">
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="session_start" class="form-label fw-bold text-success">
+                                    <i class="fas fa-calendar-check me-1"></i> Live Class Starts At
+                                </label>
+                                <input type="datetime-local" class="form-control form-control-lg border-2 border-success border-opacity-25" 
+                                       id="session_start" name="session_start" required>
+                                <small class="text-muted">You cannot select a past time.</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="expiry_limit" class="form-label fw-bold text-danger">
+                                    <i class="fas fa-hourglass-end me-1"></i> Post Expiry (Automatic Delete)
+                                </label>
+                                <select class="form-select form-select-lg border-2 border-danger border-opacity-25" id="expiry_limit" name="expiry_limit">
+                                    <option value="2">2 Hours (Urgent)</option>
+                                    <option value="4" selected>4 Hours (Standard)</option>
+                                    <option value="24">24 Hours (1 Day)</option>
+                                    <option value="168">7 Days (Weekly)</option>
+                                    <option value="permanent">Permanent (Never Delete)</option>
+                                </select>
+                                <small class="text-muted">When should this post disappear from the Market?</small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="cost" class="form-label fw-bold text-dark">Fee (GyanCoins)</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-warning border-2 border-end-0">🪙</span>
+                                    <input type="number" class="form-control border-2 border-start-0" id="cost" name="cost" 
+                                           placeholder="e.g. 50" min="1" value="10" required>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="description" class="form-label fw-bold text-dark">Description / Syllabus</label>
+                                <textarea class="form-control border-2" id="description" name="description" rows="3" 
+                                          placeholder="What will you teach? List key learning points..." required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 pt-3 border-top">
+                            <a href="/dashboard" class="btn btn-outline-secondary btn-lg px-4 rounded-pill fw-bold">Cancel</a>
+                            <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill fw-bold shadow-lg hover-btn text-white">
+                                ✨ Publish Classroom
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('session_start');
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+        
+        dateInput.min = localISOTime;
+        if (!dateInput.value) {
+            dateInput.value = localISOTime;
+        }
+
+        dateInput.addEventListener('change', function() {
+            if (this.value < localISOTime) {
+                alert("You cannot select a time in the past!");
+                this.value = localISOTime;
+            }
+        });
+    });
+</script>
+
+<style>
+    .form-control:focus, .form-select:focus {
+        border-color: #166534;
+        box-shadow: 0 0 0 0.25rem rgba(22, 101, 52, 0.1);
+    }
+    .hover-btn {
+        transition: all 0.3s ease;
+        background-color: #166534;
+        border: none;
+    }
+    .hover-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(22, 101, 52, 0.2) !important;
+        background-color: #14532d;
+    }
+    hr {
+        border-top: 2px dashed #dee2e6;
+    }
+</style>
+{% endblock %}
