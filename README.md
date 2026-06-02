@@ -6,7 +6,7 @@ installation
 ## Project Screenshot
 
 ### Home Page
-![Home Page](Home%20Page.png)
+![Home Page](home-page.png)
 
 ### Login Page
 ![Login Page](login-page.png)
