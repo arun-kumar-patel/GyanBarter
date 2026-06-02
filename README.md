@@ -16,3 +16,6 @@ installation
 
 ### Leaderboard
 ![Leaderboard](leaderboard.png)
+
+### Skills Market
+![Skills Market](skills-market.png)
