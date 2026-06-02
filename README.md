@@ -10,3 +10,6 @@ installation
 
 ### Login Page
 ![Login Page](login-page.png)
+
+### Dashboard
+![Dashboard](dashboard.png)
