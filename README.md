@@ -13,3 +13,6 @@ installation
 
 ### Dashboard
 ![Dashboard](dashboard.png)
+
+### Leaderboard
+![Leaderboard](leaderboard.png)
